@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Next Page</title>
+    <link rel="stylesheet" href="css/viewRoomStyle.css" />
+  </head>
+  <body>
+    <div class="view_room_wrapper_container" id="view_room_wrapper_id">
+      <div class="view_room_logo">
+        <figure class="view_logo_image">
+          <img
+            src="asset/meeting_mate_logo.png"
+            alt="image logo style"
+            class="logo_style"
+          />
+        </figure>
+      </div>
+      <div class="wrapper_meeting_mate" id="wrapper_meeting_id">
+        <div class="room_availablity_container" id="room_availablity_id"></div>
+        <div class="room_amenities_container" id="room_amenities_id">
+          <h3 class="room_amenities_header" id="amenities_header_id"></h3>
+          <div class="amenities_style">
+            <div class="amenities_child amenities_first_child">
+              <div class="amenity_icon">
+                <img
+                  src="asset/chair.png"
+                  alt="number of people attending the meeting"
+                  class="chair_style amenity_icon_image"
+                />
+              </div>
+              <div class="amenity_description">10</div>
+            </div>
+            <div class="amenities_child">
+              <div class="amenity_icon">
+                <img
+                  src="asset/wi-fi.png"
+                  alt="wifi amenity"
+                  class="amenity_icon_image wifi_style"
+                />
+              </div>
+              <div class="amenity_description">SiriusGuest</div>
+            </div>
+            <div class="amenities_child">
+              <div class="amenity_icon">
+                <img
+                  src="asset/computer.png"
+                  alt="desktop icon"
+                  class="amenity_icon_image desktop_style"
+                />
+              </div>
+              <div class="amenity_description">15 inch Monitor</div>
+            </div>
+            <div class="amenities_child">
+              <div class="amenity_icon">
+                <img
+                  src="asset/online-meeting.png"
+                  alt="white board meeting"
+                  class="amenity_icon_image"
+                />
+              </div>
+              <div class="amenity_description">White Board</div>
+            </div>
+          </div>
+          <div class="upcoming_meetings">
+            <h3
+              class="room_amenities_header upcoming_headers_style"
+              id="amenities_header_id"
+            >
+              Upcoming Meetings
+            </h3>
+            <div class="upcoming_meeting_schedular"></div>
+            <!-- <img src="" alt="" /> -->
+            <button class="book_now_style" id="book_now_id">Book a Room</button>
+          </div>
+        </div>
+      </div>
+      <!--DELETE ALL pop_up triggered via click of DELETE ALL button-->
+      <div
+        class="pop_up_login_container"
+        id="login_container_id"
+        style="display: none"
+      >
+        <div class="login_header">
+          <div class="confirm_login_header">PLEASE LOGIN TO BOOK A ROOM</div>
+          <figure class="cross_sign_container">
+            <img
+              src="asset/x-button.png"
+              alt="cross_sign_img"
+              class="cross_sign_warning_login"
+              id="cross_sign_warning_login_id"
+            />
+          </figure>
+        </div>
+        <div class="message_login" id="message_login_id">
+          <!--Login confirmation-->
+          <button class="confirm_login" id="confirm_login_id">
+            YES, PLEASE
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="js/roomAvailablity.js"></script>
+  </body>
+</html>

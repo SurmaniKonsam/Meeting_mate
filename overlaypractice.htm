@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Overlay</title>
+    <style>
+      .overlay_style {
+        height: 300px;
+        width: 300px;
+        border: 2px solid black;
+        background-color: yellow;
+      }
+
+      .overlay_style.overlay::before {
+        display: block;
+        content: "";
+        height: 100%;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.163);
+      }
+
+      .overlay_btn_style {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="overlay_style" id="overlay_container_id"></div>
+    <button id="overlay_id" class="overlay_btn_style">Overlay</button>
+    <script>
+      function overlayIdFunction() {
+        const overlayContainerId = document.getElementById(
+          "overlay_container_id"
+        );
+        const overlayfunction = document.getElementById("overlay_id");
+        overlayfunction.addEventListener("click", function () {
+          overlayContainerId.classList.toggle("overlay");
+        });
+      }
+
+      overlayIdFunction();
+    </script>
+  </body>
+</html>

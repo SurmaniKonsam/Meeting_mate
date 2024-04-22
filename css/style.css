@@ -1,0 +1,109 @@
+/*resetting default styling*/
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+
+/*defining background color and space for the wrapper container*/
+.wrapper_meeting_mate {
+  height: 100vh;
+  width: 100vw;
+  border: 2px solid #000000;
+  background-color: #f8f1f1;
+}
+
+/*login_container_styling and alignment*/
+.login_container {
+  height: 600px;
+  width: 600px;
+  /* border: 1px solid #000000; */
+  margin: auto;
+  margin-top: 18vh;
+}
+
+/*scanner logo styling*/
+.scanner_style {
+  display: block;
+  /* border: 2px solid green; */
+  height: 85px;
+  margin: auto;
+}
+
+.log_in_credential {
+  width: 100%;
+  background-color: white;
+  margin-top: 30px;
+  height: 355px;
+  text-align: center;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.075);
+}
+
+/*user_name container style*/
+.input_style {
+  width: 85%;
+  border: none;
+  border-bottom: 2px solid #3f7776;
+  margin-top: 70px;
+  padding: 10px 0 10px 0;
+}
+
+.user_email_style {
+  margin-top: 40px;
+}
+
+.login_btn_style {
+  background-color: #3f7776;
+  margin-top: 50px;
+  padding: 10px 0 10px 0;
+  border-radius: 5px;
+  color: #ffffff;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: -5px 0 5px -5px rgba(0, 0, 0, 0.5),
+    5px 0 5px -5px rgba(0, 0, 0, 0.5), 0 5px 20px -5px rgba(4, 78, 48, 0.836);
+}
+
+.view_rooms_style {
+  border: none;
+  padding: 10px 30px 10px 30px;
+  cursor: pointer;
+  margin-left: 235px;
+  margin-top: 20px;
+}
+
+.error_style {
+  display: block;
+  /* border: 1px solid black; */
+  width: 85%;
+  margin: auto;
+  text-align: start;
+  font-size: 12px;
+  /* background-color: #000000; */
+  color: red;
+  margin-top: 2px;
+  display: none;
+  padding: 2px 0px 2px 4px;
+}
+
+.anchor_style {
+  display: block;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.disable_view_rooms {
+  pointer-events: none;
+}
+
+
+.display_error{
+    display: block;
+}
+
+.border_error{
+    border: 2px solid #ff0000;
+}

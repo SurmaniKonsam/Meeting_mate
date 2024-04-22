@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meeting Mate</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/main.js" type="module"></script>
+  </head>
+  <body>
+    <!--wrapper container-->
+    <div class="wrapper_meeting_mate">
+      <div class="login_container">
+        <!--meeting mate scanner logo-->
+        <figure class="meeting_mate_logo">
+          <img
+            src="asset/meeting_mate.png"
+            alt="scanner image"
+            class="scanner_style"
+          />
+        </figure>
+        <section class="log_in_credential" id="log_in_credential_id">
+          <form class="logg_in_credential_child_container" id="login_form_id">
+            <div class="input_wrapper">
+              <section class="user_name_container">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  id="user_name_id"
+                  class="user_name_style user_name_credentials input_style"
+                />
+                <p class="user_error error_style" id="user_error_id">
+                  User Name is not valid
+                </p>
+              </section>
+              <section class="email_container">
+                <input
+                  type="email"
+                  id="email_id"
+                  placeholder="Email Address"
+                  class="user_email_style user_name_credentials input_style"
+                  size="30"
+                />
+                <p class="email_error error_style" id="email_error_id">
+                  Email id is not valid
+                </p>
+              </section>
+              <section class="login_in_button_container">
+                <button
+                  type="submit"
+                  class="login_btn_style input_style"
+                  id="log_in_btn_id"
+                >
+                  <a
+                    href="dashboard.htm"
+                    target="_blank"
+                    id="view_dashboard_id"
+                    class="view_dashboard_anchor_style anchor_style"
+                    >Login</a
+                  >
+                </button>
+              </section>
+            </div>
+          </form>
+        </section>
+        <button class="view_rooms_style login_btn_style">
+          <a
+            href="viewRooms.htm"
+            target="_parent"
+            id="view_rooms_id"
+            class="anchor_style"
+            >View Rooms</a
+          >
+        </button>
+        <div class="view_rooms_container"></div>
+      </div>
+    </div>
+  </body>
+</html>
