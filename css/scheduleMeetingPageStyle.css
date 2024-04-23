@@ -1,0 +1,178 @@
+/*imported google fonts type: lato*/
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+/*resetting default styling*/
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+
+/*view_room wrapper styling*/
+.view_room_wrapper_container {
+  display: block;
+  /* position: relative; */
+}
+
+.view_room_logo {
+  /* border: 1px solid #000000; */
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 10px 10px 10px;
+}
+
+/*view_logo_image container*/
+.view_logo_image {
+  height: 100%;
+  width: 200px;
+  /* border: 2px solid red; */
+  padding-left: 30px;
+}
+
+/*view_logo_style*/
+.logo_style {
+  height: inherit;
+  object-fit: contain;
+  /* border: 1px solid #000000; */
+}
+
+/*meeting rooms container*/
+.wrapper_meeting_mate {
+  height: 827px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  width: 100vw;
+  background-color: #f8f1f1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* for fading out*/
+.fade_out {
+  animation: opac 0.6s;
+}
+
+/* keyframes opac to fade from 0 to 1 in 0.3sec.*/
+@keyframes opac {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.log_in_credential {
+  width: 600px;
+  background-color: white;
+  /* margin-top: 30px; */
+  height: 550px;
+  text-align: center;
+  box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.075);
+}
+
+.logg_in_credential_child_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* margin-top: 40px; */
+}
+
+.profile_pic {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  border: 2px solid #000000;
+  background-color: #f79393;
+  margin-top: 5px;
+}
+
+.login_btn_style {
+  color: #ffffff;
+  width: 85%;
+  border: none;
+  /* border-bottom: 2px solid #3f7776; */
+  /* margin-top: 70px; */
+  padding: 10px 0 10px 0;
+  background-color: #3f7776;
+  border-radius: 5px;
+  margin-top: 30px;
+  box-shadow: 0px 5px 5px #3f7776a1;
+}
+
+.schedule_meeting_inputs {
+  width: 85%;
+  height: 60px;
+  border: none;
+  border-bottom: 2px solid #3f7776;
+  margin-top: 17px;
+}
+
+select {
+  padding-top: 5px;
+  color: #3f7776;
+}
+
+.meeting_name_style {
+  padding-left: 4px;
+}
+
+.meeting_name_style::placeholder {
+  color: #3f7776;
+}
+
+.checkbox_container {
+  display: flex;
+}
+
+.check_box_label_style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 6px;
+  color: #3f7776;
+  font-size: 13px;
+}
+
+.meeting_date_style {
+  color: #3f7776;
+}
+
+.scheduled_meeting_time_style {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.starting_time_wrapper {
+  display: flex;
+}
+
+.starting_time_label_style {
+  font-size: 14px;
+  color: #3f7776;
+  width: 82px;
+  height: 20px;
+}
+
+.starting_time_input_style {
+  margin-left: 13px;
+  width: 152px;
+  height: 20px;
+  border: none;
+  border-bottom: 2px solid #3f7776;
+  color: #3f7776;
+  padding-left: 10px;
+}
+
+/*profile picture style*/
+.profile_pic_style {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}

@@ -4,11 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboardStyle.css" />
+    <script src="js/dashboardFunction.js" type="module"></script>
   </head>
   <body>
-    <h1>Dashboard page</h1>
-    <script>
-      console.log(`inside dashboard page`);
-    </script>
+    <div class="view_room_wrapper_container">
+      <div class="view_room_logo">
+        <figure class="view_logo_image">
+          <img
+            src="asset/meeting_mate_logo.png"
+            alt="image logo style"
+            class="logo_style"
+          />
+        </figure>
+        <figure class="profile_pic">
+          <img src="" alt="" id="profile_pic_id" class="profile_pic_style" />
+        </figure>
+      </div>
+      <div class="wrapper_meeting_mate" id="wrapper_meeting_mate_id"></div>
+      <div class="add_meeting_room" id="add_meeting_id">+</div>
+    </div>
   </body>
 </html>

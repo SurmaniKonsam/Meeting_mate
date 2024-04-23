@@ -1,5 +1,6 @@
 /**
  * getParameterByName will fetch the queryParam value that is room from the htm page click event 'selectMeetingRoom'
+ * This can be exported to.
  * @param {*} name
  * @param {*} url
  * @returns

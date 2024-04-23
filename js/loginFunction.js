@@ -154,7 +154,7 @@ function checkUser(userNameValue, emailValue) {
     persistUserData(userNameValue, emailValue);
     //if unique emailId and number of users in the local storage is 0,
     //then the user will be redirected to the dashboard page.
-    goToDashboard();
+    goToDashboard(userNameValue, emailValue);
   } else {
     //here will be validating if the user is existing user.
     checkUserName(emailValue, userNameValue);
@@ -164,8 +164,12 @@ function checkUser(userNameValue, emailValue) {
 /**
  * goToDashboard : function, will redirect us to the dashboard page using window.location.href.
  */
-function goToDashboard() {
-  window.location.href = `dashboard.htm`;
+function goToDashboard(userNameValue, emailValue) {
+  /*
+    window.location.href = `nextPage.htm?room=${encodeURIComponent(roomName
+    )}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;
+  */
+  window.location.href = `dashboard.htm?user_name=${userNameValue}&email=${emailValue}`;
 }
 
 /**
@@ -183,7 +187,7 @@ function checkUserName(emailValue, userNameValue) {
   );
   if (userExists) {
     //if the user exists, the user will be redirected to the dashboard page.
-    goToDashboard();
+    goToDashboard(userNameValue, emailValue);
   } else {
     console.log("user name is wrong");
   }
@@ -229,9 +233,12 @@ function checkExistingUser(email_value) {
 function persistUserData(userNameValue, emailValue) {
   console.log("inside persist user data");
   let user_data = JSON.parse(localStorage.getItem("user_details")) || [];
+  let profile = `https://preview.redd.it/solo-leveling-trailer-been-out-for-a-min-how-are-people-v0-0ydwudqtwqpa1.png?auto=webp&s=082b91b16d2b7fd8f7513208c654828ddbf50223`;
   const login_data = {
     userName: userNameValue,
     email: emailValue,
+    meetingRooms: [],
+    profile_pic: profile,
   };
   if (!Array.isArray(user_data)) {
     user_data = []; //converting retrieved object back to array.
@@ -266,29 +273,6 @@ function emailErrorView(email) {
   } else if (email.value.trim() !== "") {
     emailError.style.display = "none";
     email.classList.remove("border_error");
-  }
-}
-
-/**
- * Function to update the state of the login button based on the validity of username and email.
- * It will decide whether the login btn will be used to navigate to dashboard or not.
- * @param {*} user
- * @param {*} email
- * @param {*} loginBtn
- */
-function updateLoginButtonState(user, email, loginBtn) {
-  const viewDashboard = document.getElementById("view_dashboard_id");
-  const isValidUser = user.value.trim() !== "";
-  const isValidEmail =
-    email.value.trim() !== "" && validateEmailRegex(email.value);
-
-  if (isValidUser && isValidEmail) {
-    // const hrefValue = "dashboard.htm";
-    // viewDashboard.setAttribute("href", hrefValue);
-    loginBtn.disabled = false; // Enable login button
-  } else {
-    loginBtn.disabled = true; // Disable login button
-    viewDashboard.removeAttribute("href");
   }
 }
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Schedule meeting page</title>
+    <link rel="stylesheet" href="css/scheduleMeetingPageStyle.css">
+    <script src="js/scheduleMeetingStyle.js" type="module"></script>
+  </head>
+  <body>
+    <div class="view_room_wrapper_container">
+      <div class="view_room_logo">
+        <figure class="view_logo_image">
+          <img
+            src="asset/meeting_mate_logo.png"
+            alt="image logo style"
+            class="logo_style"
+          />
+        </figure>
+        <figure class="profile_pic">
+          <img src="" alt="" id="profile_pic_id" class="profile_pic_style" />
+        </figure>
+      </div>
+      <div class="wrapper_meeting_mate" id="wrapper_meeting_mate_id">
+        <section class="log_in_credential" id="log_in_credential_id">
+            <!--schedule meeting form container-->
+          <form class="logg_in_credential_child_container" id="login_form_id">
+            <!--selecting meeting room-->
+            <select name="meeting_rooms" id="rooms_id" class="schedule_meeting_inputs meeting_rooms_style">
+                <option value="CHN-Room B1 Sydney">CHN-Room B1 Sydney</option>
+                <option value="CHN-Room Training 1">CHN-Room Training 1</option>
+                <option value="CHN-Room Training 2">CHN-Room Training 2</option>
+                <option value="CHN-Room Training 3">CHN-Room Training 3</option>
+                <option value="CHN-Room Tanjore">CHN-Room Tanjore</option>
+                <option value="CHN-Room Austin">CHN-Room Austin</option>
+                <option value="CHN-Room Chennai">CHN-Room Chennai</option>
+            </select>
+
+            <!--meeting name which can be made anonymous if checked the checkbox-->
+            <input class="schedule_meeting_inputs meeting_name_style" id="meeting_name_id" placeholder="Enter meeting name"></input>
+
+            <!--checkbox will decide whether the meeting room name will be anonymous or not.-->
+            <section class="schedule_meeting_inputs checkbox_container">
+                <input type="checkbox" id="anonymous_meeting_id" name="vehicle1" value="true">
+                <label for="anonymous_meeting_id" class="check_box_label_style">Show Meeting Name</label>
+            </section>
+
+            <!--selecting organizer name.-->
+            <select name="meeting_rooms" id="organizer_id" class="schedule_meeting_inputs organizer_style">
+                <!--this can be labelled as important-->
+                <option value="" disabled selected hidden>Select an organizer</option>
+            </select>
+
+            <!--scheduling meeting date.-->
+            <input class="schedule_meeting_inputs meeting_date_style" id="meeting_date_id" type="date"></input>
+
+            <!--scheduling meeting time.-->
+            <section class="schedule_meeting_inputs scheduled_meeting_time_style">
+                <!--starting time container-->
+                <div class="starting_time_wrapper">
+                    <label for="starting_time_id" class="starting_time_label_style">Select a time:</label>
+                    <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
+                </div>
+
+                <!--ending time container-->
+                <div class="starting_time_wrapper ending_time_wrapper">
+                    <label for="starting_time_id" class="starting_time_label_style">Select a time:</label>
+                    <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
+                </div>
+            </section>
+
+            <!--submit btn for schedule page form-->
+            <button
+              type="submit"
+              class="login_btn_style input_style"
+              id="log_in_btn_id"
+            >
+              Book Now
+            </button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

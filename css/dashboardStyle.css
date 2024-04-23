@@ -1,0 +1,190 @@
+/*imported google fonts type: lato*/
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+/*resetting default styling*/
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+
+/*view_room wrapper styling*/
+.view_room_wrapper_container {
+  display: block;
+  position: relative;
+}
+
+.view_room_logo {
+  /* border: 1px solid #000000; */
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0px 10px 10px 10px;
+}
+
+/*view_logo_image container*/
+.view_logo_image {
+  height: 100%;
+  width: 200px;
+  /* border: 2px solid red; */
+  padding-left: 30px;
+}
+
+/*view_logo_style*/
+.logo_style {
+  height: inherit;
+  object-fit: contain;
+  /* border: 1px solid #000000; */
+}
+
+/*meeting rooms container*/
+.wrapper_meeting_mate {
+  height: 1440px;
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+  width: 100vw;
+  background-color: #f8f1f1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* for fading out*/
+.fade_out {
+  animation: opac 0.6s;
+}
+
+/* keyframes opac to fade from 0 to 1 in 0.3sec.*/
+@keyframes opac {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*profile picture container*/
+.profile_pic {
+  width: 70px;
+  height: 70px;
+  border: 2px solid #f8f1f1;
+  background-color: blue;
+  border-radius: 50%;
+}
+
+.upcoming_meeting_header_style{
+    color : #3f7776;
+}
+
+/*profile picture style*/
+.profile_pic_style {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/*upcoming meeting container*/
+.upcoming_meeting_container_style {
+  margin: 16px 30px 0px 30px;
+  border: 1px solid black;
+  height: 190px;
+}
+
+.meeting_rooms_container_style {
+  margin: 30px 30px 0 30px;
+  height: 586px;
+  /* border: 1px solid black; */
+}
+
+.search_room_style {
+  margin-top: 15px;
+  width: 100%;
+  padding: 7px 0px 7px 10px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.meeting_rooms_style {
+  width: 100%;
+  /* border: 1px solid #000000; */
+  margin-top: 10px;
+  height: 507px;
+  /* background-color: #b697ca; */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 30px;
+  /* overflow: scroll; */
+}
+
+.room_style {
+  /* border: 1px solid #000000; */
+  background-color: #ffffff;
+  height: 37vh;
+  border-radius: 4px;
+}
+
+.meeting_image_container_style {
+  height: 300px;
+  width: 336px;
+  background-color: rgb(238, 196, 238);
+  /* border: 2px solid green; */
+  margin: auto;
+  margin-top: 4px;
+  position: relative;
+}
+
+.room_image {
+  height: 100%;
+  width: 100%;
+}
+
+.meeting_room_name {
+  margin: 4px;
+  color: #3f7776;
+}
+
+.available_sign_style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px;
+  width: 100px;
+  /* border: 1px solid #000000; */
+  position: absolute;
+  background-color: #ffffff;
+  bottom: 3px;
+  border-radius: 4px;
+  left: 3px;
+}
+
+.available_text_style {
+  font-size: 14px;
+  margin-left: 4px;
+  color: green;
+}
+
+.meeting_room_header_style{
+    color : #3f7776;
+}
+
+.sign_style {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background-color: green;
+}
+
+.add_meeting_room {
+  height: 52px;
+  width: 52px;
+  position: fixed;
+  background-color: #3f7776;
+  bottom: 10px;
+  right: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  text-align: center;
+  font-size: 42px;
+}
