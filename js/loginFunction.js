@@ -266,11 +266,14 @@ function userErrorView(user) {
  * @param {*} email
  */
 function emailErrorView(email) {
+  const loginBtn = document.getElementById("log_in_btn_id");
   const emailError = document.getElementById("email_error_id");
   if (email.value.trim() === "" || validateEmailRegex(email.value) === false) {
     emailError.style.display = "block";
     email.classList.add("border_error");
+    loginBtn.disabled = true;
   } else if (email.value.trim() !== "") {
+    loginBtn.disabled = false;
     emailError.style.display = "none";
     email.classList.remove("border_error");
   }

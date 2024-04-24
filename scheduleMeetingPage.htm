@@ -27,13 +27,7 @@
           <form class="logg_in_credential_child_container" id="login_form_id">
             <!--selecting meeting room-->
             <select name="meeting_rooms" id="rooms_id" class="schedule_meeting_inputs meeting_rooms_style">
-                <option value="CHN-Room B1 Sydney">CHN-Room B1 Sydney</option>
-                <option value="CHN-Room Training 1">CHN-Room Training 1</option>
-                <option value="CHN-Room Training 2">CHN-Room Training 2</option>
-                <option value="CHN-Room Training 3">CHN-Room Training 3</option>
-                <option value="CHN-Room Tanjore">CHN-Room Tanjore</option>
-                <option value="CHN-Room Austin">CHN-Room Austin</option>
-                <option value="CHN-Room Chennai">CHN-Room Chennai</option>
+              <option value="" disabled selected hidden>CHN-Room B1 Sydney</option>
             </select>
 
             <!--meeting name which can be made anonymous if checked the checkbox-->
@@ -58,13 +52,13 @@
             <section class="schedule_meeting_inputs scheduled_meeting_time_style">
                 <!--starting time container-->
                 <div class="starting_time_wrapper">
-                    <label for="starting_time_id" class="starting_time_label_style">Select a time:</label>
+                    <label for="starting_time_id" class="starting_time_label_style">Start time:</label>
                     <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
                 </div>
 
                 <!--ending time container-->
                 <div class="starting_time_wrapper ending_time_wrapper">
-                    <label for="starting_time_id" class="starting_time_label_style">Select a time:</label>
+                    <label for="starting_time_id" class="starting_time_label_style">End time:</label>
                     <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
                 </div>
             </section>

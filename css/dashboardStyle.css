@@ -40,7 +40,7 @@
 
 /*meeting rooms container*/
 .wrapper_meeting_mate {
-  height: 1440px;
+  height: 1520px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   width: 100vw;
@@ -73,8 +73,8 @@
   border-radius: 50%;
 }
 
-.upcoming_meeting_header_style{
-    color : #3f7776;
+.upcoming_meeting_header_style {
+  color: #3f7776;
 }
 
 /*profile picture style*/
@@ -120,13 +120,14 @@
 .room_style {
   /* border: 1px solid #000000; */
   background-color: #ffffff;
-  height: 37vh;
+  height: 368px;
   border-radius: 4px;
+  box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.312);
 }
 
 .meeting_image_container_style {
-  height: 300px;
-  width: 336px;
+  height: 335px;
+  width: 527px;
   background-color: rgb(238, 196, 238);
   /* border: 2px solid green; */
   margin: auto;
@@ -164,8 +165,8 @@
   color: green;
 }
 
-.meeting_room_header_style{
-    color : #3f7776;
+.meeting_room_header_style {
+  color: #3f7776;
 }
 
 .sign_style {
