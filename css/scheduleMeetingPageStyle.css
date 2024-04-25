@@ -70,7 +70,7 @@
   width: 600px;
   background-color: white;
   /* margin-top: 30px; */
-  height: 550px;
+  height: auto;
   text-align: center;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.075);
 }
@@ -92,16 +92,18 @@
   margin-top: 5px;
 }
 
-.login_btn_style {
+.book_now_btn_style {
   color: #ffffff;
   width: 85%;
   border: none;
+  cursor: pointer;
   /* border-bottom: 2px solid #3f7776; */
   /* margin-top: 70px; */
   padding: 10px 0 10px 0;
   background-color: #3f7776;
   border-radius: 5px;
   margin-top: 30px;
+  margin-bottom: 30px;
   box-shadow: 0px 5px 5px #3f7776a1;
 }
 
@@ -128,6 +130,37 @@ select {
 
 .checkbox_container {
   display: flex;
+  border-bottom: none;
+}
+
+.error_style {
+  display: block;
+  /* border: 1px solid black; */
+  width: 85%;
+  margin: auto;
+  text-align: start;
+  font-size: 12px;
+  /* background-color: #000000; */
+  color: red;
+  margin-top: 2px;
+  display: none;
+  padding: 2px 0px 2px 4px;
+}
+
+.display_error {
+  display: block;
+}
+
+.error_none {
+  display: none;
+}
+
+.border_error {
+  border: 2px solid #ff0000;
+}
+
+.organizer_style {
+  margin-top: 0;
 }
 
 .check_box_label_style {
@@ -147,6 +180,7 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border: none;
 }
 
 .starting_time_wrapper {

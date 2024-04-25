@@ -26,12 +26,18 @@
             <!--schedule meeting form container-->
           <form class="logg_in_credential_child_container" id="login_form_id">
             <!--selecting meeting room-->
-            <select name="meeting_rooms" id="rooms_id" class="schedule_meeting_inputs meeting_rooms_style">
+            <select name="upcoming_meetings" id="rooms_id" class="schedule_meeting_inputs meeting_rooms_style">
               <option value="" disabled selected hidden>CHN-Room B1 Sydney</option>
             </select>
+            <p class="room_name_error error_style error_none" id="room_name_error_id">
+              Room Name selection is not valid
+            </p>
 
             <!--meeting name which can be made anonymous if checked the checkbox-->
-            <input class="schedule_meeting_inputs meeting_name_style" id="meeting_name_id" placeholder="Enter meeting name"></input>
+            <input class="schedule_meeting_inputs meeting_name_style" id="meeting_name_id" placeholder="Enter meeting name" type="text"></input>
+            <p class="meeting_name_error error_none" id="meeting_name_error_id">
+              Meeting Name is not valid
+            </p>
 
             <!--checkbox will decide whether the meeting room name will be anonymous or not.-->
             <section class="schedule_meeting_inputs checkbox_container">
@@ -40,34 +46,49 @@
             </section>
 
             <!--selecting organizer name.-->
-            <select name="meeting_rooms" id="organizer_id" class="schedule_meeting_inputs organizer_style">
+            <select name="upcoming_meetings" id="organizer_id" class="schedule_meeting_inputs organizer_style">
                 <!--this can be labelled as important-->
                 <option value="" disabled selected hidden>Select an organizer</option>
             </select>
+            <p class="organizer_error error_style error_none" id="organizer_error_id">
+              Organizer selection is not valid
+            </p>
 
             <!--scheduling meeting date.-->
             <input class="schedule_meeting_inputs meeting_date_style" id="meeting_date_id" type="date"></input>
+            <p class="date_error error_style error_none" id="date_error_id">
+              Date selection is not valid
+            </p>
 
             <!--scheduling meeting time.-->
             <section class="schedule_meeting_inputs scheduled_meeting_time_style">
                 <!--starting time container-->
                 <div class="starting_time_wrapper">
                     <label for="starting_time_id" class="starting_time_label_style">Start time:</label>
-                    <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
+                    <section class="starting_time_cum_error_wrapper">
+                      <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
+                      <p class="starting_time_error error_style error_none" id="starting_time_error_id">
+                        Starting time selection is not valid
+                      </p>
+                    </section>
                 </div>
 
                 <!--ending time container-->
                 <div class="starting_time_wrapper ending_time_wrapper">
-                    <label for="starting_time_id" class="starting_time_label_style">End time:</label>
-                    <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
+                    <label for="ending_time_id" class="starting_time_label_style ending_time_label_style">End time:</label>
+                    <section class="ending_time_cum_error_wrapper">                    
+                      <input type="time" id="ending_time_id" class="starting_time_input_style" name="appt">
+                      <p class="ending_time_error error_style error_none" id="ending_time_error_id">
+                        Ending time selection is not valid
+                      </p></section>
                 </div>
             </section>
 
             <!--submit btn for schedule page form-->
             <button
               type="submit"
-              class="login_btn_style input_style"
-              id="log_in_btn_id"
+              class="book_now_btn_style input_style"
+              id="book_now_btn_id"
             >
               Book Now
             </button>

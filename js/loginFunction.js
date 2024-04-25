@@ -27,7 +27,7 @@ export function loginFunction() {
  * @param {*} userNameValue
  * @param {*} emailValue
  */
-function checkErrorOnformsubmit(checkingTargets) {
+export function checkErrorOnformsubmit(checkingTargets) {
   let errorBooleanBalues = [];
   checkingTargets.forEach((x) => {
     let elementValueLength = x.value.length;
@@ -53,7 +53,7 @@ function checkErrorOnformsubmit(checkingTargets) {
 }
 
 //mimicking the existing function
-function displayErrorMessage(errorBooleanBalues) {
+export function displayErrorMessage(errorBooleanBalues) {
   //all elements have error
   const allInputHaveError = errorBooleanBalues.every(
     (elements) => elements.errorElement === true
@@ -65,11 +65,13 @@ function displayErrorMessage(errorBooleanBalues) {
 
   //no inputs have error
   if (noErrors) {
+    console.log("no errors");
     noErrorsFunction(errorBooleanBalues);
   }
 
   //all inputs have error
   if (allInputHaveError) {
+    console.log("all inputs have error ");
     displayAllelementError(errorBooleanBalues);
   }
 
@@ -85,7 +87,7 @@ function selectingErrorDisplay(errorBooleanBalues) {
   errorBooleanBalues.forEach((x) => {
     if (x.errorElement === true) {
       //get the element and its next sibling and only display the error message for them.
-      console.log(`element id : ${x.elementId}`);
+      // console.log(`element id : ${x.elementId}`);
       const element = document.getElementById(x.elementId);
       const errorSibling = element.nextElementSibling;
       displayBorderError(element);
@@ -116,10 +118,11 @@ function noErrorsFunction(errorBooleanBalues) {
  * @param {*} errorBooleanBalues
  */
 function displayAllelementError(errorBooleanBalues) {
+  console.log(`inside display all element error`);
   errorBooleanBalues.forEach((x) => {
     const element = document.getElementById(x.elementId);
-    console.log(`next element : ${element.nextElementSibling.id}`);
     let adjacentErrorElement = element.nextElementSibling;
+    // console.log(`adjacent error id : ${adjacentErrorElement.id}`);
     displayError(adjacentErrorElement);
     displayBorderError(element);
   });
@@ -130,6 +133,7 @@ function displayAllelementError(errorBooleanBalues) {
  * @param {*} element
  */
 function displayError(element) {
+  console.log(`element id : ${element.id}`);
   element.classList.add("display_error");
 }
 
@@ -178,7 +182,7 @@ function goToDashboard(userNameValue, emailValue) {
  * @param {*} userNameValue
  */
 function checkUserName(emailValue, userNameValue) {
-  const viewDashboard = document.getElementById("view_dashboard_id");
+  // const viewDashboard = document.getElementById("view_dashboard_id");
   const arr = returnUserData();
   console.log(`user name : ${userNameValue}`);
   const userExists = arr.some(
@@ -186,6 +190,7 @@ function checkUserName(emailValue, userNameValue) {
       user.value.userName === userNameValue && user.value.email === emailValue
   );
   if (userExists) {
+    // console.log(`user exists`);
     //if the user exists, the user will be redirected to the dashboard page.
     goToDashboard(userNameValue, emailValue);
   } else {
@@ -234,15 +239,17 @@ function persistUserData(userNameValue, emailValue) {
   console.log("inside persist user data");
   let user_data = JSON.parse(localStorage.getItem("user_details")) || [];
   let profile = `https://preview.redd.it/solo-leveling-trailer-been-out-for-a-min-how-are-people-v0-0ydwudqtwqpa1.png?auto=webp&s=082b91b16d2b7fd8f7513208c654828ddbf50223`;
-  const login_data = {
-    userName: userNameValue,
-    email: emailValue,
-    meetingRooms: [],
-    profile_pic: profile,
-  };
+
   if (!Array.isArray(user_data)) {
     user_data = []; //converting retrieved object back to array.
   }
+
+  const login_data = {
+    userName: userNameValue,
+    email: emailValue,
+    profile_pic: profile,
+  };
+
   user_data.push(login_data);
   localStorage.setItem("user_details", JSON.stringify(user_data));
 }
