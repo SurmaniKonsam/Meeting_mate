@@ -113,15 +113,16 @@
   border: none;
   border-bottom: 2px solid #3f7776;
   margin-top: 17px;
+  /* padding-left: 5px; */
+}
+
+.schedule_logo_style {
+  cursor: pointer;
 }
 
 select {
   padding-top: 5px;
   color: #3f7776;
-}
-
-.meeting_name_style {
-  padding-left: 4px;
 }
 
 .meeting_name_style::placeholder {
@@ -143,7 +144,7 @@ select {
   /* background-color: #000000; */
   color: red;
   margin-top: 2px;
-  display: none;
+  /* display: none; */
   padding: 2px 0px 2px 4px;
 }
 
@@ -163,6 +164,11 @@ select {
   margin-top: 0;
 }
 
+.ending_wrapper_alignment {
+  margin-top: 43px;
+  margin-bottom: 10px;
+}
+
 .check_box_label_style {
   display: flex;
   justify-content: center;
@@ -174,6 +180,7 @@ select {
 
 .meeting_date_style {
   color: #3f7776;
+  padding-left: 10px;
 }
 
 .scheduled_meeting_time_style {

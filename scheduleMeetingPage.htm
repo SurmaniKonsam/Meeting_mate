@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Schedule meeting page</title>
     <link rel="stylesheet" href="css/scheduleMeetingPageStyle.css">
-    <script src="js/scheduleMeetingStyle.js" type="module"></script>
+    <script src="js/scheduleMeeting.js" type="module"></script>
   </head>
   <body>
     <div class="view_room_wrapper_container">
@@ -15,6 +15,7 @@
             src="asset/meeting_mate_logo.png"
             alt="image logo style"
             class="logo_style"
+            id="schedule_meeting_page_logo"
           />
         </figure>
         <figure class="profile_pic">
@@ -30,18 +31,18 @@
               <option value="" disabled selected hidden>CHN-Room B1 Sydney</option>
             </select>
             <p class="room_name_error error_style error_none" id="room_name_error_id">
-              Room Name selection is not valid
+              Room needs to be selected!!!
             </p>
 
             <!--meeting name which can be made anonymous if checked the checkbox-->
             <input class="schedule_meeting_inputs meeting_name_style" id="meeting_name_id" placeholder="Enter meeting name" type="text"></input>
             <p class="meeting_name_error error_none" id="meeting_name_error_id">
-              Meeting Name is not valid
+              Meeting Name Is Empty!!!
             </p>
 
             <!--checkbox will decide whether the meeting room name will be anonymous or not.-->
             <section class="schedule_meeting_inputs checkbox_container">
-                <input type="checkbox" id="anonymous_meeting_id" name="vehicle1" value="true">
+                <input type="checkbox" id="anonymous_meeting_id">
                 <label for="anonymous_meeting_id" class="check_box_label_style">Show Meeting Name</label>
             </section>
 
@@ -51,19 +52,19 @@
                 <option value="" disabled selected hidden>Select an organizer</option>
             </select>
             <p class="organizer_error error_style error_none" id="organizer_error_id">
-              Organizer selection is not valid
+              Organizer needs to be selected!!!
             </p>
 
             <!--scheduling meeting date.-->
             <input class="schedule_meeting_inputs meeting_date_style" id="meeting_date_id" type="date"></input>
             <p class="date_error error_style error_none" id="date_error_id">
-              Date selection is not valid
+              Date selection is empty!!!
             </p>
 
             <!--scheduling meeting time.-->
             <section class="schedule_meeting_inputs scheduled_meeting_time_style">
                 <!--starting time container-->
-                <div class="starting_time_wrapper">
+                <div class="starting_time_wrapper" id="starting_wrapper_id">
                     <label for="starting_time_id" class="starting_time_label_style">Start time:</label>
                     <section class="starting_time_cum_error_wrapper">
                       <input type="time" id="starting_time_id" class="starting_time_input_style" name="appt">
@@ -74,11 +75,11 @@
                 </div>
 
                 <!--ending time container-->
-                <div class="starting_time_wrapper ending_time_wrapper">
+                <div class="starting_time_wrapper ending_time_wrapper" id="ending_time_wrapper_id">
                     <label for="ending_time_id" class="starting_time_label_style ending_time_label_style">End time:</label>
                     <section class="ending_time_cum_error_wrapper">                    
                       <input type="time" id="ending_time_id" class="starting_time_input_style" name="appt">
-                      <p class="ending_time_error error_style error_none" id="ending_time_error_id">
+                      <p class="ending_time_error error_none" id="ending_time_error_id">
                         Ending time selection is not valid
                       </p></section>
                 </div>

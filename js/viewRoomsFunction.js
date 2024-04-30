@@ -29,6 +29,7 @@ function selectMeetingRoom() {
         roomAvailable: true,
         upcomingMeeting: "",
       };
+
       room_data_details.push(room_data);
       localStorage.setItem("room_details", JSON.stringify(room_data_details));
       const roomName = encodeURIComponent(lsRoomName);
@@ -38,4 +39,5 @@ function selectMeetingRoom() {
     });
   });
 }
+
 selectMeetingRoom();

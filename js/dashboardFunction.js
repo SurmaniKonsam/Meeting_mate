@@ -1,24 +1,5 @@
 console.log(`inside dashboard page`);
 
-// function resetMeetingRooms() {
-//   let meetingRooms = [];
-//   localStorage.setItem("upcoming_meetings", JSON.stringify(meetingRooms));
-// }
-
-// resetMeetingRooms();
-//use for extracting query param from the url
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-// console.log(`email id : ${getParameterByName("email")}`);
-
 /**
  * getUserData : function, used here can be imported, it returns the user_details from the local storage.
  * @returns
@@ -38,8 +19,6 @@ function getUserData() {
  * Currently, the profile pic will always set the last available user details profile_pic.
  */
 function setProfilePic() {
-  // let getUserName = getParameterByName("user_name");
-  // console.log(`username : ${getUserName}`);
   let fetchData = getUserData();
   let profilePicture;
   fetchData.forEach((x) => {
@@ -52,25 +31,21 @@ function setProfilePic() {
 }
 
 /**
- * checkOrganiserMeetingRooms : function, checks the available meeting room for the logged in user, via array.length feature.
- * If the returned length is 0 then the user doesn't have any meeting room on his/her name.
+ * getLoggedInEmailId : function, returns current logged in email id
  * @returns
+ * Is a util
  */
-// function checkOrganiserMeetingRooms() {
-//   let getUserEmail = getParameterByName("email");
-//   let fetchData = getUserData();
-//   let user_fetched_data = fetchData.find(
-//     (data) => data.value.email === getUserEmail
-//   );
-//   let meeting_rooms = user_fetched_data.value.meetingRooms;
-//   return meeting_rooms?.length;
-// }
+function getLoggedInEmailId() {
+  let emailId = localStorage.getItem("email");
+  console.log(`email id : ${emailId}`);
+  return emailId;
+}
 
 /**
  * getUpcomingMeetings : function, is used for getting the upcoming_meetings details from the local storage
  */
 function getUpcomingMeetings() {
-  let emailId = getParameterByName("email");
+  let emailId = getLoggedInEmailId();
   // console.log(`emaild : ${emailId}`);
   const upcoming_meetings =
     JSON.parse(localStorage.getItem("upcoming_meetings")) || [];
@@ -94,7 +69,7 @@ function getUpcomingMeetings() {
  * @returns
  */
 function returnUpcomingMeetingList() {
-  let emailId = getParameterByName("email");
+  let emailId = getLoggedInEmailId();
   // console.log(`emaild : ${emailId}`);
   const upcoming_meetings =
     JSON.parse(localStorage.getItem("upcoming_meetings")) || [];
@@ -107,7 +82,7 @@ function returnUpcomingMeetingList() {
   return upcoming_meetings[index].upcomingMeetingList;
 }
 
-getUpcomingMeetings();
+// getUpcomingMeetings();
 
 function setOrganiserMeetingInfo() {
   const meeting_room_container = document.getElementById(
@@ -145,9 +120,14 @@ function appendMeetingContainerContent(meeting_room_container) {
   //on the top page.
   if (meeting_rooms_length === 0) {
     meetingHeader.textContent = "No Upcoming Meetings";
+    upcoming_meeting_header.classList.add("reduce_height");
     upcoming_meeting_header.appendChild(meetingHeader);
+    const noUpcomingText = document.createElement("div");
+    noUpcomingText.textContent = "No Upcoming Meetings Available";
+    noUpcomingText.classList.add("no_upcoming_text_style");
+    upcoming_meeting_header.appendChild(noUpcomingText);
   } else {
-    console.log(`we have our upcoming meetings`);
+    // console.log(`we have our upcoming meetings`);
     meetingHeader.textContent = "My Upcoming Meetings";
     upcoming_meeting_header.appendChild(meetingHeader);
 
@@ -182,16 +162,25 @@ function appendingUpcomingMeetings(upcoming_meeting_header) {
 }
 
 function appendingMeetingInfoDetails(meetingInfoCard, data) {
-  console.log(`data : ${data}`);
   const meetingName = document.createElement("div");
   meetingName.classList.add("meeting_name_style");
-  // meetingName.classList.add("meeting_info_margin_alignment");
-  // meetingName.classList.add("meeting_info_font_style");
   meetingName.textContent = data.meetingName;
 
+  //organizer info, with profile pic and the organiser name.
   const organizer = document.createElement("div");
   organizer.classList.add("organizer_style");
-  let content = data.organizer;
+
+  let checkboxValue = data.checkbox;
+  console.log();
+
+  //need to check here if the value is checked or not.
+  console.log(`data.checkbox : ${typeof data.checkbox}`);
+
+  let content;
+  //if checked the check box the meeting name will be shown
+  content = data.organizer;
+
+  //organizer meeting.
   let imageUrl = "asset/user_pic.png";
   let htmlString = `
     <div>
@@ -280,6 +269,15 @@ function appendMeetingRooms(meeting_room_container) {
   meetingRooms.classList.add("meeting_rooms_media_query");
   meetingsRoomsContainer.appendChild(meetingRooms);
 
+  /*
+  meeting rooms not available appended which shall be made appeared only if the search doesn't matches with any of the meeting
+  room name
+  */
+  const meetingRoomsNotAvailable = document.createElement("div");
+  meetingRoomsNotAvailable.id = "meeting_rooms_not_available_id";
+  meetingRoomsNotAvailable.classList.add("meeting_room_not_available_style");
+  meetingsRoomsContainer.appendChild(meetingRoomsNotAvailable);
+
   //all the meeting rooms available will be appended from this function mentioned.
   meetingRoomsAppendingChild(meetingRooms);
 
@@ -353,6 +351,8 @@ function meetingRoomsAppendingChild(meetingRooms) {
         documentFragment.appendChild(meetingRoom);
       });
       meetingRooms.appendChild(documentFragment);
+      const elements = document.querySelectorAll(".meeting_room_name");
+      searchCardFunction(elements);
     })
     .catch((error) => {
       //if there is error in reading the json file will catch the error and log it to the console.
@@ -365,13 +365,62 @@ function meetingRoomsAppendingChild(meetingRooms) {
  */
 function addingMeetingFunction() {
   const meetingBtn = document.getElementById("add_meeting_id");
-  let emailId = getParameterByName("email");
   meetingBtn.addEventListener("click", function () {
     //window.location.href = `dashboard.htm?user_name=${userNameValue}&email=${emailValue}`;
-    window.location.href = `scheduleMeetingPage.htm?email=${emailId}`;
+    window.location.href = `scheduleMeetingPage.htm`;
+  });
+}
+
+/**
+ * searchCardFunction : function, will search for the elements passed as argument parent node.
+ * Via every input value thus passed, the input value will be used to match the elements passed textContent
+ * If the input passed matches the element passed textContent then, the element parent node will be displayed 'block'.
+ * Else, the element parent node will be displayed 'none'.
+ * If none of the input search text content matches, then all the element's parent node will get displayed.
+ * @param {*} elements
+ */
+function searchCardFunction(elements) {
+  const searchRoomId = document.getElementById("search_room_id");
+  const roomNotAvailableContainer = document.getElementById(
+    "room_not_available_id"
+  );
+  let timeoutId;
+  // console.log(`length of element : ${elements.length}`);
+
+  // Define a debounce function
+  const debounce = (func, delay) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(func, delay);
+  };
+
+  searchRoomId.addEventListener("keyup", function () {
+    //debounce function called to delay the execution time of the event 'keyup'
+    debounce(() => {
+      const searchText = searchRoomId.value.toLowerCase();
+      let matchFound = false;
+      let i = 0;
+      elements.forEach((x) => {
+        let elementText = x.textContent.toLowerCase();
+        if (elementText.includes(searchText) || searchText === "") {
+          x.parentNode.style.display = "block";
+          roomNotAvailableContainer.style.display = "none";
+          matchFound = true;
+        } else {
+          x.parentNode.style.display = "none";
+        }
+      });
+
+      // If no match is found, display all parent nodes
+      if (!matchFound && searchText !== "") {
+        elements.forEach((x) => {
+          x.parentNode.style.display = "block";
+        });
+      }
+    }, 1); // Adjust the delay (in milliseconds) as needed
   });
 }
 
 addingMeetingFunction();
 setOrganiserMeetingInfo();
 setProfilePic();
+// searchCardFunction();

@@ -18,7 +18,7 @@ function getParameterByName(name, url) {
 //Get the roomName from the query parameter
 let roomName = getParameterByName("room");
 
-//Get the roomLength
+//Get the roomLength.
 let roomLength = getParameterByName("roomLength");
 
 //Get the loginState
@@ -105,7 +105,6 @@ function crossSignLogin() {
 function confirmLoginFunction() {
   const confirmLogin = document.getElementById("confirm_login_id");
   const loginContainerId = document.getElementById("login_container_id");
-  let returnFrombookNow = true;
   confirmLogin.addEventListener("click", function () {
     loginContainerId.style.display = "none";
     /*window.location.href = `nextPage.htm?room=${encodeURIComponent(roomName)}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;*/

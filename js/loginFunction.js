@@ -49,10 +49,14 @@ export function checkErrorOnformsubmit(checkingTargets) {
     const element = document.getElementById(x.elementId);
     console.log(`value : ${element.value}`);
   });
+  //displaying error message based on the errorElement.
   displayErrorMessage(errorBooleanBalues);
 }
 
-//mimicking the existing function
+/**
+ * displayErrorMessage : function, displaying error message based on error element
+ * @param {*} errorBooleanBalues
+ */
 export function displayErrorMessage(errorBooleanBalues) {
   //all elements have error
   const allInputHaveError = errorBooleanBalues.every(
@@ -156,6 +160,8 @@ function checkUser(userNameValue, emailValue) {
   let userDetailLength = arr.length;
   if (userDetailLength === 0 || emailIdIsUnique === true) {
     persistUserData(userNameValue, emailValue);
+    //persisting email id to a key named "email" for retrieval and constructing the dom in other pages.
+    persistingEmailId(emailValue);
     //if unique emailId and number of users in the local storage is 0,
     //then the user will be redirected to the dashboard page.
     goToDashboard(userNameValue, emailValue);
@@ -173,7 +179,7 @@ function goToDashboard(userNameValue, emailValue) {
     window.location.href = `nextPage.htm?room=${encodeURIComponent(roomName
     )}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;
   */
-  window.location.href = `dashboard.htm?user_name=${userNameValue}&email=${emailValue}`;
+  window.location.href = `dashboard.htm`;
 }
 
 /**
@@ -190,8 +196,9 @@ function checkUserName(emailValue, userNameValue) {
       user.value.userName === userNameValue && user.value.email === emailValue
   );
   if (userExists) {
-    // console.log(`user exists`);
+    console.log(`user exists`);
     //if the user exists, the user will be redirected to the dashboard page.
+    persistingEmailId(emailValue);
     goToDashboard(userNameValue, emailValue);
   } else {
     console.log("user name is wrong");
@@ -252,6 +259,11 @@ function persistUserData(userNameValue, emailValue) {
 
   user_data.push(login_data);
   localStorage.setItem("user_details", JSON.stringify(user_data));
+}
+
+//persisting email id to the key "email"
+function persistingEmailId(emailValue) {
+  localStorage.setItem("email", emailValue);
 }
 
 /**

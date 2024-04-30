@@ -126,9 +126,9 @@
 }
 
 .meeting_rooms_container_style {
-  margin: 30px 30px 0 30px;
-  height: 586px;
-  /* border: 1px solid black; */
+  margin: 80px 30px 0 30px;
+  height: auto;
+  border: 1px solid black;
 }
 
 .meeting_name_style {
@@ -146,6 +146,7 @@
   border-radius: 10px;
   height: 153px;
   background-color: #ffffff;
+  margin-bottom: 10px;
   box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.312);
 }
 
@@ -170,7 +171,7 @@
   width: 100%;
   /* border: 1px solid #000000; */
   margin-top: 10px;
-  height: 507px;
+  height: auto;
   /* background-color: #b697ca; */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -251,8 +252,15 @@
   font-size: 42px;
 }
 
-@media screen and (max-width: 800px) {
-  .meeting_rooms_media_query {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.reduce_height {
+  height: 0px;
 }
+
+.no_upcoming_text_style {
+  padding-top: 18px;
+  font-weight: 300;
+  font-size: 15px;
+}
+
+/* @media screen and (min-width: 600px) {
+} */
