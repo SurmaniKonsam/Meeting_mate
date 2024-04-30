@@ -1,79 +1,12 @@
-/**
- * returnUserData : given function can be imported from its parent js folder where used. For the time being, its made
- * available in the same js page.
- * @returns
- */
-function returnUserData() {
-  let user_data = JSON.parse(localStorage.getItem("user_details")) || [];
-  const arr = Object.keys(user_data).map((key) => ({
-    key,
-    value: user_data[key],
-  }));
-  return arr;
-}
-
-/**
- * selectOrganiserfunction : function, will take the number of existing user and be used as options for select organiser tag.
- */
-function selectOrganiserfunction() {
-  const organiserId = document.getElementById("organizer_id");
-  const imageId = document.getElementById("profile_pic_id");
-  const userData = returnUserData();
-  const documentFragment = document.createDocumentFragment();
-  userData.forEach((x) => {
-    const organiser = document.createElement("option");
-    organiser.value = `${x.value.userName}`;
-    organiser.textContent = `${x.value.userName}`;
-    imageId.src = `${x.value.profile_pic}`;
-    documentFragment.appendChild(organiser);
-  });
-  organiserId.appendChild(documentFragment);
-}
-
-/**
- * setMeetingRoomName : function, will be the fetching the meeting room name from the roomData.json via fetch api.
- */
-function setMeetingRoomName() {
-  const meetingRoomContainer = document.getElementById("rooms_id");
-  fetch("../data/roomdata.json")
-    .then((response) => {
-      //if response is not ok then throw error
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      const documentFragment = document.createDocumentFragment();
-      data.forEach((element, index) => {
-        const room = document.createElement("option");
-        room.value = `${element.room_name}`;
-        room.textContent = `${element.room_name}`;
-        documentFragment.appendChild(room);
-      });
-      meetingRoomContainer.appendChild(documentFragment);
-    })
-    .catch((error) => {
-      //if there is error in reading the json file will catch the error and log it to the console.
-      console.error("Error fetching the JSON file:", error);
-    });
-}
-
-/**
- * meeetingNameErrorView : function, wil validate if the input field 'meeting_name_id'.
- * @param {*} meetingName
- */
-function errorView(element) {
-  const adjacentSibling = element.nextElementSibling;
-  if (element.value.trim() === "") {
-    adjacentSibling.classList.add("error_style");
-    adjacentSibling.classList.remove("error_none");
-    element.classList.add("border_error");
-  } else {
-    adjacentSibling.classList.add("error_none");
-    element.classList.remove("border_error");
-  }
-}
+import {
+  getCurrentTime,
+  setMeetingRoomName,
+  selectOrganiserfunction,
+  errorView,
+  displayError,
+  meetingNameValidation,
+  meetingDateValidation,
+} from "../utils/currentTimeUtil.js";
 
 /**
  * bookNowBtnFunction : function, is a btn being handling event onsubmit for the form id 'login_form_id'.
@@ -111,8 +44,6 @@ function bookNowBtnFunction() {
     startingTime,
     endTimeInput,
   ];
-
-  let validatedAllInputField = false;
 
   scheduleForm.onsubmit = function (event) {
     console.log("form submitted");
@@ -175,7 +106,6 @@ function displayErrorMessage(errorBooleanBalues) {
 //when some element's value is empty.
 function selectingErrorDisplay(errorBooleanBalues) {
   console.log("\n");
-  console.log("\n");
   errorBooleanBalues.forEach((x) => {
     const element = document.getElementById(x.elementId);
     const adjacentErrorElement = element.nextElementSibling;
@@ -188,30 +118,6 @@ function selectingErrorDisplay(errorBooleanBalues) {
       //yhape persist krna.
     }
   });
-}
-
-/**
- * displayError : function, will be displayed for if all the error element is true.
- * @param {*} adjacentErrorElement
- * @param {*} element
- */
-function displayError(adjacentErrorElement, element) {
-  switch (element.id) {
-    case "meeting_date_id":
-      adjacentErrorElement.textContent = "Date selection is empty!!!";
-      break;
-    case "starting_time_id":
-      adjacentErrorElement.textContent = "Starting time selection is empty!!!";
-      break;
-    case "ending_time_id":
-      adjacentErrorElement.textContent = "Ending time selection is empty!!!";
-      break;
-  }
-  //if all the values are empty error_none is removed.
-  adjacentErrorElement.classList.remove("error_none");
-  adjacentErrorElement.classList.add("display_error");
-  adjacentErrorElement.classList.add("error_style");
-  element.classList.add("border_error");
 }
 
 /**
@@ -229,6 +135,7 @@ function viewErrorElementsWithValue(elementId) {
       meetingDateValidation(elementId);
       break;
     case "starting_time_id":
+      console.log(`starting time validation`);
       startingTimeValidation(elementId);
       break;
     case "ending_time_id":
@@ -236,121 +143,52 @@ function viewErrorElementsWithValue(elementId) {
       endingTimeIdValidation(elementId);
       break;
     default:
-      // console.log("other name id");
       break;
   }
 }
 
+/**
+ * endingTimeIdValidation : function, endingTime validation.
+ * this cannot be made util, since the ending time should be compared with the starting time.
+ * endingTime should also be validated with starting time.
+ * @param {*} elementId
+ */
 function endingTimeIdValidation(elementId) {
   let endingTimeElement = document.getElementById(elementId);
   let endingTimeErrorElement = endingTimeElement.nextElementSibling;
-  let endingTime = startingTimeElement.value;
-  let endingTimeWrapper = document.getElementById("starting_wrapper_id");
-
-  //Get the current time
-  let currentTime = new Date();
-  let currentHours = currentTime.getHours();
-  let currentMinutes = currentTime.getMinutes();
+  let endingTime = endingTimeElement.value;
 
   // Convert the current time to a string in HH:MM format
-  let currentFormattedTime =
-    (currentHours < 10 ? "0" : "") +
-    currentHours +
-    ":" +
-    (currentMinutes < 10 ? "0" : "") +
-    currentMinutes;
+  let currentFormattedTime = getCurrentTime();
 
   //validate starting time
   if (endingTime <= currentFormattedTime) {
-    // console.log(`starting time is invalid`);
-    endingTimeWrapper.classList.add("ending_wrapper_alignment");
     endingTimeErrorElement.style.display = "block";
-    endingTimeErrorElement.textContent = `Selected ending time is invalid`;
+    endingTimeErrorElement.textContent = `Ending time must be greater than current time`;
     endingTimeErrorElement.classList.add("error_style");
     document.getElementById("starting_time_id").value = "";
   } else {
     console.log(`Ending time is valid`);
-    //with this block the value of starting time will be retained.
     endingTimeErrorElement.style.display = "none";
-    endingTimeWrapper.classList.remove("ending_wrapper_alignment");
-    let endingTimeId = "ending_time_id";
-    // endingTimeValidation(endingTimeId, startingTime);
-  }
-}
-
-/**
- * meetingNameValidation : function, input field : meeting_name_id validation.
- * @param {*} elementId
- */
-function meetingNameValidation(elementId) {
-  let element = document.getElementById(elementId);
-  let adjacentSibling = element.nextElementSibling;
-  let elementValue = element.value;
-
-  // Regular expression to match names starting with an uppercase letter
-  const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
-
-  if (!nameRegex.test(elementValue)) {
-    adjacentSibling.textContent = `Meeting name must start with an uppercase letter.`;
-    adjacentSibling.classList.remove("error_none");
-    adjacentSibling.classList.add("error_style");
-  } else {
-    console.log("Name matches with the regex");
-  }
-}
-
-/**
- * meetingDateValidation : function, used for validating the input field 'meeting_date_id'
- * @param {*} elementId
- */
-function meetingDateValidation(elementId) {
-  let dateValue = document.getElementById(elementId).value;
-  let meetingDate = document.getElementById(elementId);
-  let dateErrorElement = meetingDate.nextElementSibling;
-
-  const selectedDateValue = new Date(dateValue);
-  const currentDate = new Date();
-  currentDate.setHours(0, 0, 0, 0);
-  selectedDateValue.setHours(0, 0, 0, 0);
-
-  //now time for validation.
-
-  if (selectedDateValue.getTime() < currentDate.getTime()) {
-    console.log("expiry date is lesser than the current date");
-    dateErrorElement.classList.remove("error_none");
-    dateErrorElement.textContent = `Selected date must be greater than the current Date`;
-    dateErrorElement.classList.add("error_style");
-  } else {
-    console.log("Date matches with the regex");
   }
 }
 
 /**
  * startingTimeValidation : function, starting time validation.
+ * starting time must also be validated with the ending time.
  * @param {*} elementId
  */
 function startingTimeValidation(elementId) {
   let startingTimeElement = document.getElementById(elementId);
   let startingTimeErrorElement = startingTimeElement.nextElementSibling;
   let startingTime = startingTimeElement.value;
-  let startingTimeWrapper = document.getElementById("starting_wrapper_id");
 
-  // Get the current time
-  let currentTime = new Date();
-  let currentHours = currentTime.getHours();
-  let currentMinutes = currentTime.getMinutes();
   // Convert the current time to a string in HH:MM format
-  let currentFormattedTime =
-    (currentHours < 10 ? "0" : "") +
-    currentHours +
-    ":" +
-    (currentMinutes < 10 ? "0" : "") +
-    currentMinutes;
+  let currentFormattedTime = getCurrentTime();
 
   //validate starting time
   if (startingTime <= currentFormattedTime) {
-    // console.log(`starting time is invalid`);
-    startingTimeWrapper.classList.add("ending_wrapper_alignment");
+    console.log(`starting time is invalid`);
     startingTimeErrorElement.classList.remove("error_none");
     startingTimeErrorElement.textContent = `Selected starting time is invalid`;
     startingTimeErrorElement.classList.add("error_style");
@@ -358,46 +196,6 @@ function startingTimeValidation(elementId) {
   } else {
     //with this block the value of starting time will be retained.
     console.log(`starting time is valid`);
-    startingTimeWrapper.classList.remove("ending_wrapper_alignment");
-    let endingTimeId = "ending_time_id";
-    endingTimeValidation(endingTimeId, startingTime);
-  }
-}
-
-/**
- * endingTimeValidation : function, ending time validation.
- */
-function endingTimeValidation(elementId, startingTime) {
-  let endingTimeElement = document.getElementById(elementId);
-  let endingTimeErrorElement = endingTimeElement.nextElementSibling;
-  let endingTime = endingTimeElement.value;
-  let endingWrapper = document.getElementById("ending_time_wrapper_id");
-
-  // Get the current time
-  let currentTime = new Date();
-  let currentHours = currentTime.getHours();
-  let currentMinutes = currentTime.getMinutes();
-  // Convert the current time to a string in HH:MM format
-  let currentFormattedTime =
-    (currentHours < 10 ? "0" : "") +
-    currentHours +
-    ":" +
-    (currentMinutes < 10 ? "0" : "") +
-    currentMinutes;
-
-  //validate starting time
-  if (endingTime <= currentFormattedTime && endingTime < startingTime) {
-    console.log(`ending time is invalid`);
-    endingWrapper.classList.add("ending_wrapper_alignment");
-    // endingTimeErrorElement.classList.remove("error_none");
-    endingTimeErrorElement.style.display = "block";
-    endingTimeErrorElement.textContent = `Selected ending time is invalid`;
-    endingTimeErrorElement.classList.add("error_style");
-    document.getElementById("ending_time_id").value = "";
-  } else if (endingTime > startingTime) {
-    endingTimeErrorElement.style.display = "none";
-    endingWrapper.classList.remove("ending_wrapper_alignment");
-    console.log(`ending time is valid`);
   }
 }
 
@@ -572,6 +370,10 @@ function getUpcomingMeetings() {
   return upcomingMeetings;
 }
 
+
+/**
+ * scheduleMeetingPageLogo : function, clicking the logo of the page will redirect you to the dashboard page.
+ */
 function scheduleMeetingPageLogo() {
   const scheduleMeetingPageLogo = document.getElementById(
     "schedule_meeting_page_logo"
@@ -584,5 +386,5 @@ function scheduleMeetingPageLogo() {
 
 scheduleMeetingPageLogo();
 bookNowBtnFunction();
-setMeetingRoomName();
 selectOrganiserfunction();
+setMeetingRoomName();
