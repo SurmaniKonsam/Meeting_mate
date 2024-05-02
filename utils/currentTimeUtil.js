@@ -67,6 +67,7 @@ export function setMeetingRoomName() {
         documentFragment.appendChild(room);
       });
       meetingRoomContainer.appendChild(documentFragment);
+      //we need to check whether, after selecting the meeting room name we can fetch its value or not.
     })
     .catch((error) => {
       //if there is error in reading the json file will catch the error and log it to the console.
@@ -126,12 +127,13 @@ export function meetingNameValidation(elementId) {
   // Regular expression to match names starting with an uppercase letter
   const nameRegex = /^[A-Z][a-zA-Z\s]*$/;
 
-  if (!nameRegex.test(elementValue)) {
+  if (!nameRegex.test(elementValue) || elementValue === "") {
     adjacentSibling.textContent = `Meeting name must start with an uppercase letter.`;
     adjacentSibling.classList.remove("error_none");
     adjacentSibling.classList.add("error_style");
+    return false;
   } else {
-    console.log("Name matches with the regex");
+    return true;
   }
 }
 
@@ -150,13 +152,41 @@ export function meetingDateValidation(elementId) {
   selectedDateValue.setHours(0, 0, 0, 0);
 
   //now time for validation.
-  if (selectedDateValue.getTime() < currentDate.getTime()) {
-    console.log("expiry date is lesser than the current date");
+  if (selectedDateValue.getTime() < currentDate.getTime() || dateValue === "") {
     dateErrorElement.classList.remove("error_none");
     dateErrorElement.textContent = `Selected date must be greater than the current Date`;
     dateErrorElement.classList.add("error_style");
+    return false;
   } else {
-    console.log("Date matches with the regex");
+    return true;
   }
 }
 
+/**
+ * displayInvalidErrorTimeField : function, will display the error messaages for the input fields 'starting_time_id' and
+ * 'ending_time_id'
+ * @param {*} errorElement
+ * @param {*} element
+ * @param {*} errorMessage
+ */
+export function displayInvalidErrorTimeField(
+  errorElement,
+  element,
+  errorMessage
+) {
+  errorElement.textContent = errorMessage;
+  errorElement.style.display = "block";
+  errorElement.classList.add("error_style");
+  //   errorElement.classList.add("error_time_adjustment");
+  element.value = "";
+}
+
+/**
+ * roomNameValidation : function, will validate the value of the room name whether its empty or not.
+ * @param {*} elementId
+ * @returns
+ */
+export function optionSelectionValidation(elementId) {
+  const roomElementValue = document.getElementById(elementId).value;
+  return roomElementValue === "" ? false : true;
+}

@@ -145,7 +145,7 @@ select {
   color: red;
   margin-top: 2px;
   /* display: none; */
-  padding: 2px 0px 2px 4px;
+  /* padding: 2px 0px 2px 4px; */
 }
 
 .display_error {
@@ -194,21 +194,30 @@ select {
   display: flex;
 }
 
+.error_time_adjustment {
+  display: block;
+  width: 135px;
+  padding-top: 2px;
+}
+
 .starting_time_label_style {
   font-size: 14px;
   color: #3f7776;
-  width: 82px;
+  width: 65px;
   height: 20px;
+  padding-top: 10px;
 }
 
 .starting_time_input_style {
-  margin-left: 13px;
+  margin-left: 17px;
   width: 152px;
   height: 20px;
   border: none;
   border-bottom: 2px solid #3f7776;
   color: #3f7776;
-  padding-left: 10px;
+  /* padding-left: 10px; */
+  padding: 17px 15px;
+  font-size: 15px;
 }
 
 /*profile picture style*/

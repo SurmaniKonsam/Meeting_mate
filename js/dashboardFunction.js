@@ -403,7 +403,6 @@ function searchCardFunction(elements) {
         let elementText = x.textContent.toLowerCase();
         if (elementText.includes(searchText) || searchText === "") {
           x.parentNode.style.display = "block";
-          roomNotAvailableContainer.style.display = "none";
           matchFound = true;
         } else {
           x.parentNode.style.display = "none";

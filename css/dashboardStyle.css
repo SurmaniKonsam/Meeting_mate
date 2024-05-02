@@ -261,6 +261,14 @@
   font-weight: 300;
   font-size: 15px;
 }
+/* 
+.meeting_room_not_available_style {
+  display: none;
+  width: 100%;
+  height: 50px;
+  border: 1px solid black;
+  background-color: yellow;
+} */
 
 /* @media screen and (min-width: 600px) {
 } */

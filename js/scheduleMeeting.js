@@ -6,6 +6,8 @@ import {
   displayError,
   meetingNameValidation,
   meetingDateValidation,
+  displayInvalidErrorTimeField,
+  optionSelectionValidation,
 } from "../utils/currentTimeUtil.js";
 
 /**
@@ -45,10 +47,11 @@ function bookNowBtnFunction() {
     endTimeInput,
   ];
 
+  let validatedFields = false;
   scheduleForm.onsubmit = function (event) {
     console.log("form submitted");
     event.preventDefault();
-    checkErrors(checkingTargets);
+    checkErrors(checkingTargets, validatedFields);
   };
 }
 
@@ -57,7 +60,7 @@ function bookNowBtnFunction() {
  * alternative length of the element value === 0
  * @param {*} checkingTargets
  */
-function checkErrors(checkingTargets) {
+function checkErrors(checkingTargets, validatedFields) {
   //all the elements validation must be done here.
   let errorBooleanBalues = [];
   checkingTargets.forEach((x) => {
@@ -81,6 +84,7 @@ function checkErrors(checkingTargets) {
 
   //display error message will be used to display error based on the boolean value thus passed.
   displayErrorMessage(errorBooleanBalues);
+  validatedFields = true;
 }
 
 /**
@@ -118,6 +122,30 @@ function selectingErrorDisplay(errorBooleanBalues) {
       //yhape persist krna.
     }
   });
+
+  allRequiredFieldInputValidation();
+}
+
+function allRequiredFieldInputValidation() {
+  const meetingNameValidated = viewErrorElementsWithValue("meeting_name_id");
+  const meetingDateValidated = viewErrorElementsWithValue("meeting_date_id");
+  const startingTimeValidated = viewErrorElementsWithValue("starting_time_id");
+  const endingTimeValidated = viewErrorElementsWithValue("ending_time_id");
+
+  // Check if all fields are validated
+  const allFieldsValidated =
+    meetingNameValidated &&
+    meetingDateValidated &&
+    startingTimeValidated &&
+    endingTimeValidated;
+
+  if (allFieldsValidated) {
+    // All fields are validated
+    console.log("All fields are validated.");
+  } else {
+    // At least one field is not validated
+    console.log("Validation failed for one or more fields.");
+  }
 }
 
 /**
@@ -126,25 +154,42 @@ function selectingErrorDisplay(errorBooleanBalues) {
  * @param {*} elementId
  */
 function viewErrorElementsWithValue(elementId) {
+  let validatedAllfield = true;
+  // console.log(`before all validation : ${validatedAllfield}`);
   switch (elementId) {
     //meeting name validation completed.
+    case "rooms_id":
+      optionSelectionValidation(elementId);
+      break;
+    case "organizer_id":
+      organizerValidation(elementId);
+      break;
     case "meeting_name_id":
-      meetingNameValidation(elementId);
+      validatedAllfield = meetingNameValidation(elementId) && validatedAllfield;
       break;
     case "meeting_date_id":
-      meetingDateValidation(elementId);
+      validatedAllfield = meetingDateValidation(elementId) && validatedAllfield;
       break;
     case "starting_time_id":
-      console.log(`starting time validation`);
-      startingTimeValidation(elementId);
+      validatedAllfield =
+        startingTimeValidation(elementId) && validatedAllfield;
       break;
     case "ending_time_id":
-      console.log("ending time id validation");
-      endingTimeIdValidation(elementId);
+      validatedAllfield =
+        endingTimeIdValidation(elementId) && validatedAllfield;
       break;
     default:
       break;
   }
+  return validatedAllfield;
+}
+
+function organizerValidation(elementId) {
+  const organiserElementValue = document.getElementById(elementId).value;
+  if (organiserElementValue === "") {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -156,20 +201,71 @@ function viewErrorElementsWithValue(elementId) {
 function endingTimeIdValidation(elementId) {
   let endingTimeElement = document.getElementById(elementId);
   let endingTimeErrorElement = endingTimeElement.nextElementSibling;
-  let endingTime = endingTimeElement.value;
+  let endingTimeValue = endingTimeElement.value;
 
   // Convert the current time to a string in HH:MM format
   let currentFormattedTime = getCurrentTime();
 
   //validate starting time
-  if (endingTime <= currentFormattedTime) {
-    endingTimeErrorElement.style.display = "block";
-    endingTimeErrorElement.textContent = `Ending time must be greater than current time`;
-    endingTimeErrorElement.classList.add("error_style");
-    document.getElementById("starting_time_id").value = "";
+  if (endingTimeValue <= currentFormattedTime) {
+    let errorMessage = `Ending time should be greater than current time`;
+    // setValidateFalse();
+    //this can be made util
+    displayInvalidErrorTimeField(
+      endingTimeErrorElement,
+      endingTimeElement,
+      errorMessage
+    );
+    return false;
   } else {
-    console.log(`Ending time is valid`);
+    //starting time value for comparison
+    let startingTimeValue = document.getElementById("starting_time_id").value;
     endingTimeErrorElement.style.display = "none";
+
+    //checking starting time value.
+    if (startingTimeValue === "") {
+      // setValidateFalse();
+      return false;
+    } else {
+      return endingTimeComparisonWithEndingtime(
+        startingTimeValue,
+        endingTimeValue
+      );
+    }
+  }
+}
+
+/**
+ * endingTimeComparisonWithEndingtime : function, will do the comparison between the ending time greater than the
+ * current time, with the starting time value.
+ * If the value of the starting time is greater than the ending time, then the ending time shall make appear
+ * the error message.
+ * @param {*} startingTimeValue
+ * @param {*} endingTime
+ */
+function endingTimeComparisonWithEndingtime(
+  startingTimeValue,
+  endingTimeValue
+) {
+  const endingTimeElement = document.getElementById("ending_time_id");
+
+  //adjacent error element.
+  const endingtimeErrorElement = endingTimeElement.nextElementSibling;
+
+  if (endingTimeValue <= startingTimeValue) {
+    let errorMessage = "Ending time should be greater than the starting time.";
+    // setValidateFalse();
+    displayInvalidErrorTimeField(
+      endingtimeErrorElement,
+      endingTimeElement,
+      errorMessage
+    );
+    return false;
+  } else {
+    // setValidatedTrue();
+    endingtimeErrorElement.style.display = "none";
+    //now we can persist the data from here.
+    return true;
   }
 }
 
@@ -181,21 +277,64 @@ function endingTimeIdValidation(elementId) {
 function startingTimeValidation(elementId) {
   let startingTimeElement = document.getElementById(elementId);
   let startingTimeErrorElement = startingTimeElement.nextElementSibling;
-  let startingTime = startingTimeElement.value;
+  let startingTimeValue = startingTimeElement.value;
 
   // Convert the current time to a string in HH:MM format
   let currentFormattedTime = getCurrentTime();
 
   //validate starting time
-  if (startingTime <= currentFormattedTime) {
-    console.log(`starting time is invalid`);
-    startingTimeErrorElement.classList.remove("error_none");
-    startingTimeErrorElement.textContent = `Selected starting time is invalid`;
-    startingTimeErrorElement.classList.add("error_style");
-    document.getElementById("starting_time_id").value = "";
+  if (startingTimeValue <= currentFormattedTime) {
+    let errorMessage = "Starting time must be greater than current time";
+    // setValidateFalse();
+    displayInvalidErrorTimeField(
+      startingTimeErrorElement,
+      startingTimeElement,
+      errorMessage
+    );
+    return false;
   } else {
-    //with this block the value of starting time will be retained.
-    console.log(`starting time is valid`);
+    let endingTimeValue = document.getElementById("ending_time_id").value;
+    //now same comparison of the starting time with the ending time value.
+
+    if (endingTimeValue === "") {
+      // setValidateFalse();
+      startingTimeErrorElement.style.display = "none";
+      return false;
+    } else {
+      return startingTimeComparisonWithEndingTime(
+        endingTimeValue,
+        startingTimeValue
+      );
+    }
+  }
+}
+
+/**
+ * startingTimeComparisonWithEndingTime : function, starting time validation with the ending time.
+ * @param {*} endingTimeValue
+ * @param {*} startingTimeValue
+ */
+function startingTimeComparisonWithEndingTime(
+  endingTimeValue,
+  startingTimeValue
+) {
+  const startingTimeElement = document.getElementById("starting_time_id");
+  const startingTimeErrorElement = startingTimeElement.nextElementSibling;
+
+  if (endingTimeValue <= startingTimeValue) {
+    let errorMessage = "Starting time must be less than the ending time";
+    // setValidateFalse();
+    displayInvalidErrorTimeField(
+      startingTimeErrorElement,
+      startingTimeElement,
+      errorMessage
+    );
+    return false;
+  } else {
+    startingTimeErrorElement.style.display = "none";
+    // setValidatedTrue();
+    //time to persist from here.
+    return true;
   }
 }
 
@@ -207,6 +346,7 @@ function everyInputFieldEmptyError(errorBooleanBalues) {
     let adjacentErrorElement = element.nextElementSibling;
     displayError(adjacentErrorElement, element);
   });
+  // setValidateFalse();
 }
 
 /**
@@ -237,8 +377,6 @@ function persistUserMeetingRoomDetails(startingTime, expiry, endTimeValue) {
     startingTime: startingTime,
     endingTime: endTimeValue,
   };
-
-  //i can do my validation over here.
 
   //fetchMeetingDetails(upcomingMeetings);
   setUpcomingMeetings(upcomingMeetings);
@@ -369,7 +507,6 @@ function getUpcomingMeetings() {
     JSON.parse(localStorage.getItem("upcoming_meetings")) || [];
   return upcomingMeetings;
 }
-
 
 /**
  * scheduleMeetingPageLogo : function, clicking the logo of the page will redirect you to the dashboard page.
