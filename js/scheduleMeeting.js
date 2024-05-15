@@ -264,11 +264,28 @@ function validateAndPersistMeetingData() {
     let getTimeSlots = getTimeslots();
 
     /**
-     * we are finding the index based on the 'date'
+     * we are finding the index based on the 'date' for the key 'time_slots'
      */
     let index_found_via_date = getTimeSlots.findIndex(
       (data) => data.date === meetingDate
     );
+
+    let loggedInUser = getLoggedInUserEmailId();
+    /**
+     * we will find the index for the ls key 'upcoming_meetings' using the logged in email id.
+     */
+    let upcomingMeetings = getUpcomingMeetings();
+    let upcoming_meeting_index_via_email = upcomingMeetings.findIndex(
+      (data) => data.email === loggedInUser
+    );
+
+    console.log(
+      `index : ${upcoming_meeting_index_via_email} in upcoming_meetings for email : ${loggedInUser}`
+    );
+
+    /**
+     * this code, will fetch the object from the upcoming_meetings based on the email id.
+     */
 
     /*
     if the fetched index is not negative: it states that we have found our key with the meeting date
@@ -276,11 +293,10 @@ function validateAndPersistMeetingData() {
     That is if the meeting date is found.
     Means, the index to persist the new meeting data to the existing data is found.
     */
-    if (index_found_via_date !== -1) {
-      /**
-       * index_found_via_date : will be used to update the existing data
-       */
-      console.log(`index found via date : ${index_found_via_date}`);
+    if (
+      index_found_via_date !== -1 &&
+      upcoming_meeting_index_via_email !== -1
+    ) {
       /**
        * finding the object having the same meeting date via the 'meetingDate'
        * This object fetched selectively out of the meeting date have 'bookedTimeSlots'.
@@ -291,10 +307,33 @@ function validateAndPersistMeetingData() {
       );
 
       /**
+       * find the upcoming meeting data based on the logged in user email id.
+       * We will then fetch the upcoming meetings from the fetched data, and then update our data accordingly.
+       */
+      let upcoming_meeting_data = upcomingMeetings.find(
+        (data) => data.email === loggedInUser
+      );
+
+      /**
+       * this piece of code, is used to update the upcoming_meeting_list array with the existing meeting data.
+       * So that, the new upcoming meeting data can get pushed to the existing ones.
+       */
+      let upcoming_meeting_list = [];
+      upcoming_meeting_data.upcomingMeetingList.forEach((meeting) => {
+        upcoming_meeting_list.push(meeting);
+      });
+
+      // upcoming_meeting_list.forEach((x) => {
+      //   console.log(`x.roomName : ${x.roomName}`);
+      // });
+
+      /**
        * this piece of code will be validated only for if the selected time slots matches exactly as that of the
        * time slots available in the local storage, for the selected date booked slots.
        * If the meeting room name matches in the selected date booked slots,
        * it will give you the index on which the meeting room name was matched in the selected date booked.
+       * If the index of the same meeting room name is found, then via that index we can alert the user that
+       * the meeting room is not available.
        * Else,
        * it will return you '0'/
        */
@@ -304,8 +343,6 @@ function validateAndPersistMeetingData() {
         startingTime,
         endingTime
       );
-
-      // console.log(`return time index : ${returntimeIndex}`);
 
       let bookedSlots = [];
       /**
@@ -320,17 +357,23 @@ function validateAndPersistMeetingData() {
 
       /**
        * returntimeIndex : will be either '0' or 'index' on which the roomName is found.
-       * -7 is used to indicate so that the return time index is always true
+       * is used to indicate so that the return time index is always true
        */
       if (returnRoomAvailability) {
         alert(`Meeting room available`);
 
+        /**
+         * This code will return the update time slots of type 'Array' from the addTimeSlots
+         */
         let updatedBookedSlots = addTimeSlots(
           time_slots_fetched_data_for_the_selected_date.bookedTimeSlots,
           startingTime,
           endingTime,
           bookedSlotsData,
-          bookedSlots
+          bookedSlots,
+          upcoming_meeting_list,
+          upcomingMeetings,
+          upcoming_meeting_index_via_email
         );
 
         //here bookedSlots is being returned and assigned to the indexfoundViaDate index.
@@ -341,7 +384,7 @@ function validateAndPersistMeetingData() {
       } else {
         alert(`Meeting room not available`);
         const scheduleForm = document.getElementById("login_form_id");
-        scheduleForm.reset();
+        // scheduleForm.reset();
       }
     } else {
       //if the meeting date is not found.
@@ -378,18 +421,23 @@ function addTimeSlots(
   startingTime,
   endingTime,
   bookedSlotsData,
-  bookedSlots
+  bookedSlots,
+  upcoming_meeting_list,
+  upcomingMeetings,
+  upcoming_meeting_index_via_email
 ) {
   let inserted = false;
   for (let i = 0; i < bookedTimeSlots.length; i++) {
     if (endingTime < bookedTimeSlots[i].startingTime) {
       bookedSlots.splice(i, 0, bookedSlotsData);
+      upcoming_meeting_list.push(upcomingMeetings);
       inserted = true;
       break;
     } else if (
       startingTime === bookedTimeSlots[i].startingTime &&
       endingTime === bookedTimeSlots[i].endingTime
     ) {
+      upcoming_meeting_list.push(upcomingMeetings);
       bookedSlots.splice(i + 1, 0, bookedSlotsData);
       inserted = true;
       break;
@@ -398,6 +446,16 @@ function addTimeSlots(
   if (!inserted) {
     bookedSlots.push(bookedSlotsData); // Insert at the end if not inserted earlier
   }
+
+  //this can be removed if the code doesn't work.
+  upcomingMeetings[upcoming_meeting_index_via_email].upcomingMeetingList =
+    upcoming_meeting_list;
+
+  /**
+   * This piece of code could also be removed.
+   * Setting the local storage "upcoming_meetings" again.
+   */
+  // localStorage.setItem("upcoming_meetings", JSON.stringify(upcomingMeetings));
   return bookedSlots;
 }
 
@@ -416,16 +474,56 @@ function roomAvailablity(bookedTimeSlots, roomName, startingTime, endingTime) {
       bookedTimeSlots[i].startingTime === startingTime &&
       bookedTimeSlots[i].endingTime === endingTime
     ) {
-      console.log("inside the if block");
-      console.log(`index : ${i}`);
       if (bookedTimeSlots[i].roomName === roomName) {
         console.log(`room with same name found!!!`);
         //room with same name found return true.
         return false;
       }
     } else if (
+      startingTime === bookedTimeSlots[i].startingTime &&
+      endingTime < bookedTimeSlots[i].endingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    } else if (
+      startingTime === bookedTimeSlots[i].startingTime &&
+      endingTime > bookedTimeSlots[i].endingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    } else if (
+      endingTime === bookedTimeSlots[i].endingTime &&
+      startingTime > bookedTimeSlots[i].startingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    } else if (
+      endingTime === bookedTimeSlots[i].endingTime &&
+      startingTime < bookedTimeSlots[i].startingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    } else if (
       startingTime > bookedTimeSlots[i].startingTime &&
-      endingTime <= bookedTimeSlots[i].endingTime
+      endingTime < bookedTimeSlots[i].endingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    }
+    //moving left
+    else if (
+      startingTime < bookedTimeSlots[i].startingTime &&
+      endingTime > bookedTimeSlots[i].startingTime &&
+      endingTime < bookedTimeSlots[i].endingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    }
+    //moving right
+    else if (
+      endingTime > bookedTimeSlots[i].endingTime &&
+      startingTime > bookedTimeSlots[i].startingTime &&
+      startingTime < bookedTimeSlots[i].endingTime
     ) {
       alert("selected time slot collides!!!");
       return false;
