@@ -76,7 +76,6 @@ function returnUpcomingMeetingList() {
   return upcoming_meetings[index].upcomingMeetingList;
 }
 
-
 /**
  * setOrganiserMeetingInfo : function, used for appending the My Upcoming Meeting list and Meeting room data.
  */
@@ -92,7 +91,6 @@ function setOrganiserMeetingInfo() {
   //second, appending meeting rooms with meeting room images, adding/selecting meeting room and search meeting room
   appendMeetingRooms(meeting_room_container);
 }
-
 
 /**
  * appendMeetingHeader : function, depending upon availablity of the meeting rooms by the organizer
@@ -145,25 +143,31 @@ function appendingUpcomingMeetings(upcoming_meeting_header) {
   //now time to append the actual booked meetings.
   let upcomingMeetings = returnUpcomingMeetingList();
   upcomingMeetings.forEach((x) => {
-    // console.log(`meetings : ${x}`);
     const meetingInfoCard = document.createElement("div");
     meetingInfoCard.classList.add("upcoming_meeting_info");
     meetingInfoCard.id = "meeting_info_card_id";
-    // meetingInfoCard.textContent = x.roomName;
     upcomingsMeetingContainer.appendChild(meetingInfoCard);
     appendingMeetingInfoDetails(meetingInfoCard, x);
   });
 }
 
+/**
+ * appendingMeetingInfoDetails : function, will append meeting details in the "My Upcoming Meeeting list"
+ * @param {*} meetingInfoCard
+ * @param {*} data
+ */
 function appendingMeetingInfoDetails(meetingInfoCard, data) {
   const meetingName = document.createElement("div");
   meetingName.classList.add("meeting_name_style");
-  meetingName.textContent = data.meetingName;
+  if (data.checkbox === false) {
+    meetingName.textContent = "Confidential Meeting";
+  } else {
+    meetingName.textContent = data.meetingName;
+  }
 
   //organizer info, with profile pic and the organiser name.
   const organizer = document.createElement("div");
   organizer.classList.add("organizer_style");
-
 
   let content;
   //if checked the check box the meeting name will be shown
@@ -233,7 +237,7 @@ function appendingMeetingInfoDetails(meetingInfoCard, data) {
 
 /**
  * appendMeetingRooms : function, will append the meeting rooms available in the search meeting room container
- * @param {*} meeting_room_container 
+ * @param {*} meeting_room_container
  */
 function appendMeetingRooms(meeting_room_container) {
   const documentFragment = document.createDocumentFragment();
