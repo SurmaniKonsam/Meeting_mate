@@ -164,6 +164,39 @@ function allRequiredFieldInputValidation() {
 }
 
 /**
+ * checkLoggedInUserForUpcomingMeetingList : function, will check if the upcoming_meeting list local storage
+ * contains the logged in user or not.
+ * If not, it will update the "upcoming_meetings" key, with the new updated object containing the new loggedInuser
+ * with the empty upcomingMeetingList : []
+ * const newUserUpcomingMeetings = {
+ *    email: loggedInUser,
+ *    upcomingMeetingList: [],
+ *  };
+ */
+function checkLoggedInUserForUpcomingMeetingList() {
+  let loggedInUser = getLoggedInUserEmailId();
+  let upcomingMeetings = getUpcomingMeetings();
+  let updatedUpcomingMeetings = [];
+  upcomingMeetings.forEach((data) => {
+    updatedUpcomingMeetings.push(data);
+  });
+  let index_found_via_date = upcomingMeetings.findIndex(
+    (data) => data.email === loggedInUser
+  );
+  if (index_found_via_date < 0) {
+    const newUserUpcomingMeetings = {
+      email: loggedInUser,
+      upcomingMeetingList: [],
+    };
+    updatedUpcomingMeetings.push(newUserUpcomingMeetings);
+    localStorage.setItem(
+      "upcoming_meetings",
+      JSON.stringify(updatedUpcomingMeetings)
+    );
+  }
+}
+
+/**
  * validateAndPersistMeetingData : function, will check for if the meeting data is already booked for the current date
  * or not.
  */
@@ -214,9 +247,6 @@ function validateAndPersistMeetingData() {
     First look for if we have any meeting data in the local storage.
   */
   if (fetchedUpcomingMeetings.length === 0 && fetchTimeSlots.length === 0) {
-    console.log("no upcoming meetings in the local storage.");
-    console.log(`time slots is empty`);
-
     //if its so, now time to persist the data in the local storage.
     let meetingList = [];
     meetingList.push(upcomingMeetingsListData);
@@ -258,9 +288,6 @@ function validateAndPersistMeetingData() {
 
     //we need to set for the time slots here to.
   } else {
-    console.log("upcoming meetings is not empty.");
-    console.log("time slots is not empty");
-
     let getTimeSlots = getTimeslots();
 
     /**
@@ -279,24 +306,13 @@ function validateAndPersistMeetingData() {
       (data) => data.email === loggedInUser
     );
 
-    console.log(
-      `index : ${upcoming_meeting_index_via_email} in upcoming_meetings for email : ${loggedInUser}`
-    );
-
-    /**
-     * this code, will fetch the object from the upcoming_meetings based on the email id.
-     */
-
     /*
-    if the fetched index is not negative: it states that we have found our key with the meeting date
-    similar to the selected date.
-    That is if the meeting date is found.
-    Means, the index to persist the new meeting data to the existing data is found.
+      if the fetched index is not negative: it states that we have found our key with the meeting date
+      similar to the selected date.
+      That is if the meeting date is found.
+      Means, the index to persist the new meeting data to the existing data is found.
     */
-    if (
-      index_found_via_date !== -1 &&
-      upcoming_meeting_index_via_email !== -1
-    ) {
+    if (index_found_via_date !== -1) {
       /**
        * finding the object having the same meeting date via the 'meetingDate'
        * This object fetched selectively out of the meeting date have 'bookedTimeSlots'.
@@ -322,10 +338,6 @@ function validateAndPersistMeetingData() {
       upcoming_meeting_data.upcomingMeetingList.forEach((meeting) => {
         upcoming_meeting_list.push(meeting);
       });
-
-      // upcoming_meeting_list.forEach((x) => {
-      //   console.log(`x.roomName : ${x.roomName}`);
-      // });
 
       /**
        * this piece of code will be validated only for if the selected time slots matches exactly as that of the
@@ -407,16 +419,49 @@ function validateAndPersistMeetingData() {
 
       resetTimeSlots.push(newTimeSlots);
       localStorage.setItem("time_slots", JSON.stringify(resetTimeSlots));
+
+      console.log(
+        `upcoming meeting index via email : ${upcoming_meeting_index_via_email}`
+      );
+
+      //repopulate the upcoming meeting keys again.
+      let updatedMeetingList = [];
+
+      let upcoming_meeting_data = upcomingMeetings.find(
+        (data) => data.email === loggedInUser
+      );
+
+      upcoming_meeting_data.upcomingMeetingList.forEach((meeting) => {
+        updatedMeetingList.push(meeting);
+      });
+
+      updatedMeetingList.push(upcomingMeetingsListData);
+
+      upcomingMeetings[upcoming_meeting_index_via_email].upcomingMeetingList =
+        updatedMeetingList;
+
+      localStorage.setItem(
+        "upcoming_meetings",
+        JSON.stringify(upcomingMeetings)
+      );
     }
   }
-
-  // //setting the local storage.
-  // localStorage.setItem(
-  //   "upcoming_meetings",
-  //   JSON.stringify(fetchedUpcomingMeetings)
-  // );
 }
 
+/**
+ * addTimeSlots : function, will validate the order of the time slots thus added.
+ * It will sort the time slots thus added both in the local storage key 'time_slots' and 'upcoming_meetings'.
+ * @param {*} bookedTimeSlots
+ * @param {*} startingTime
+ * @param {*} endingTime
+ * @param {*} bookedSlotsData
+ * @param {*} bookedSlots
+ * @param {*} upcoming_meeting_list
+ * @param {*} upcomingMeetings
+ * @param {*} upcoming_meeting_index_via_email
+ * @param {*} upcomingMeetingsListData
+ * @returns
+ */
 function addTimeSlots(
   bookedTimeSlots,
   startingTime,
@@ -468,6 +513,7 @@ function addTimeSlots(
  * Which will then be used in the if condition to check if the room name is available or not.
  * Since, the return value if meeting room name not available will always be 0.
  * The validation will pass for the meeting room excluding the meeting room available in the first index
+ * Conclusion : time slots collision.
  * @param {*} bookedTimeSlots
  */
 function roomAvailablity(bookedTimeSlots, roomName, startingTime, endingTime) {
@@ -483,50 +529,22 @@ function roomAvailablity(bookedTimeSlots, roomName, startingTime, endingTime) {
         return false;
       }
     } else if (
-      startingTime === bookedTimeSlots[i].startingTime &&
-      endingTime < bookedTimeSlots[i].endingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    } else if (
-      startingTime === bookedTimeSlots[i].startingTime &&
-      endingTime > bookedTimeSlots[i].endingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    } else if (
-      endingTime === bookedTimeSlots[i].endingTime &&
-      startingTime > bookedTimeSlots[i].startingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    } else if (
-      endingTime === bookedTimeSlots[i].endingTime &&
-      startingTime < bookedTimeSlots[i].startingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    } else if (
-      startingTime > bookedTimeSlots[i].startingTime &&
-      endingTime < bookedTimeSlots[i].endingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    }
-    //moving left
-    else if (
-      startingTime < bookedTimeSlots[i].startingTime &&
-      endingTime > bookedTimeSlots[i].startingTime &&
-      endingTime < bookedTimeSlots[i].endingTime
-    ) {
-      alert("selected time slot collides!!!");
-      return false;
-    }
-    //moving right
-    else if (
-      endingTime > bookedTimeSlots[i].endingTime &&
-      startingTime > bookedTimeSlots[i].startingTime &&
-      startingTime < bookedTimeSlots[i].endingTime
+      (startingTime === bookedTimeSlots[i].startingTime &&
+        endingTime < bookedTimeSlots[i].endingTime) ||
+      (startingTime === bookedTimeSlots[i].startingTime &&
+        endingTime > bookedTimeSlots[i].endingTime) ||
+      (endingTime === bookedTimeSlots[i].endingTime &&
+        startingTime > bookedTimeSlots[i].startingTime) ||
+      (endingTime === bookedTimeSlots[i].endingTime &&
+        startingTime < bookedTimeSlots[i].startingTime) ||
+      (startingTime > bookedTimeSlots[i].startingTime &&
+        endingTime < bookedTimeSlots[i].endingTime) ||
+      (startingTime < bookedTimeSlots[i].startingTime &&
+        endingTime > bookedTimeSlots[i].startingTime &&
+        endingTime < bookedTimeSlots[i].endingTime) ||
+      (endingTime > bookedTimeSlots[i].endingTime &&
+        startingTime > bookedTimeSlots[i].startingTime &&
+        startingTime < bookedTimeSlots[i].endingTime)
     ) {
       alert("selected time slot collides!!!");
       return false;
@@ -980,3 +998,4 @@ scheduleMeetingPageLogo();
 bookNowBtnFunction();
 selectOrganiserfunction();
 setMeetingRoomName();
+checkLoggedInUserForUpcomingMeetingList();

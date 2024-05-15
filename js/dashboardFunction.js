@@ -1,5 +1,3 @@
-console.log(`inside dashboard page`);
-
 /**
  * getUserData : function, used here can be imported, it returns the user_details from the local storage.
  * @returns
@@ -13,7 +11,6 @@ function getUserData() {
   return arr;
 }
 
-//set profile picture
 /**
  * setProfilePic : function, will set the profile picture for the user dashboard page iteratively.
  * Currently, the profile pic will always set the last available user details profile_pic.
@@ -37,7 +34,6 @@ function setProfilePic() {
  */
 function getLoggedInEmailId() {
   let emailId = localStorage.getItem("email");
-  console.log(`email id : ${emailId}`);
   return emailId;
 }
 
@@ -60,8 +56,6 @@ function getUpcomingMeetings() {
   } else {
     return upcoming_meetings[index].upcomingMeetingList.length;
   }
-
-  // console.log(`upcoming meeting lengths : ${upcomingMeetingList.length}`);
 }
 
 /**
@@ -82,8 +76,10 @@ function returnUpcomingMeetingList() {
   return upcoming_meetings[index].upcomingMeetingList;
 }
 
-// getUpcomingMeetings();
 
+/**
+ * setOrganiserMeetingInfo : function, used for appending the My Upcoming Meeting list and Meeting room data.
+ */
 function setOrganiserMeetingInfo() {
   const meeting_room_container = document.getElementById(
     "wrapper_meeting_mate_id"
@@ -97,9 +93,9 @@ function setOrganiserMeetingInfo() {
   appendMeetingRooms(meeting_room_container);
 }
 
-//appending meeting header, depending upon availablity of the meeting rooms by the organizer
+
 /**
- * appendMeetingHeader : function,
+ * appendMeetingHeader : function, depending upon availablity of the meeting rooms by the organizer
  * @param {*} meeting_room_container
  */
 function appendMeetingContainerContent(meeting_room_container) {
@@ -108,13 +104,11 @@ function appendMeetingContainerContent(meeting_room_container) {
   upcoming_meeting_header.id = "upcoming_meeting_container_id";
   upcoming_meeting_header.classList.add("upcoming_meeting_container_style");
   let meeting_rooms_length = getUpcomingMeetings();
-  // console.log(`meeting rooms length : ${meeting_rooms_length}`);
   const meetingHeader = document.createElement("h3");
   meetingHeader.classList.add("upcoming_meeting_header_style");
   meetingHeader.id = "upcoming_meeting_header_id";
   //meeting_rooms_length should now be taken from the upcoming_meetings key stored in the local storage
   //where, the container will be displayed with grid-template-columns : repeated(3/1fr).
-  //the container height will be kept constant allowing it to scroll vertically.
 
   //check first, if the email id is new for each login attempts.
   //on the top page.
@@ -170,11 +164,6 @@ function appendingMeetingInfoDetails(meetingInfoCard, data) {
   const organizer = document.createElement("div");
   organizer.classList.add("organizer_style");
 
-  let checkboxValue = data.checkbox;
-  console.log();
-
-  //need to check here if the value is checked or not.
-  console.log(`data.checkbox : ${typeof data.checkbox}`);
 
   let content;
   //if checked the check box the meeting name will be shown
@@ -242,6 +231,10 @@ function appendingMeetingInfoDetails(meetingInfoCard, data) {
   meetingInfoCard.appendChild(meetingTime);
 }
 
+/**
+ * appendMeetingRooms : function, will append the meeting rooms available in the search meeting room container
+ * @param {*} meeting_room_container 
+ */
 function appendMeetingRooms(meeting_room_container) {
   const documentFragment = document.createDocumentFragment();
   const meetingsRoomsContainer = document.createElement("div");
@@ -294,7 +287,6 @@ function appendMeetingRooms(meeting_room_container) {
  */
 function meetingRoomsAppendingChild(meetingRooms) {
   const documentFragment = document.createDocumentFragment();
-  // console.log("meeting rooms child");
   fetch("../data/roomdata.json")
     .then((response) => {
       //if response is not ok then throw error
@@ -305,7 +297,6 @@ function meetingRoomsAppendingChild(meetingRooms) {
     })
     .then((data) => {
       data.forEach((element, index) => {
-        // console.log(`img url : ${element.image_url}`);
         const meetingRoom = document.createElement("div");
         meetingRoom.classList.add("room_style");
 
@@ -366,7 +357,6 @@ function meetingRoomsAppendingChild(meetingRooms) {
 function addingMeetingFunction() {
   const meetingBtn = document.getElementById("add_meeting_id");
   meetingBtn.addEventListener("click", function () {
-    //window.location.href = `dashboard.htm?user_name=${userNameValue}&email=${emailValue}`;
     window.location.href = `scheduleMeetingPage.htm`;
   });
 }
@@ -385,7 +375,6 @@ function searchCardFunction(elements) {
     "meeting_rooms_not_available_id"
   );
   let timeoutId;
-  // console.log(`length of element : ${elements.length}`);
 
   // Define a debounce function
   const debounce = (func, delay) => {
@@ -426,4 +415,3 @@ function searchCardFunction(elements) {
 addingMeetingFunction();
 setOrganiserMeetingInfo();
 setProfilePic();
-// searchCardFunction();

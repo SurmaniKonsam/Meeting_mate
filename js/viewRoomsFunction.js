@@ -2,7 +2,6 @@
  * selectMeetingRoom will be added with click event, for constructing room availablity page in the html page : 'nextPage`
  */
 function selectMeetingRoom() {
-  console.log(`inside select meeting room`);
   let loginState = true;
   const selectAllRoom = document.querySelectorAll(".meeting_rooms");
   selectAllRoom.forEach((x) => {

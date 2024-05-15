@@ -2,10 +2,8 @@ export function loginFunction() {
   const user = document.getElementById("user_name_id");
   const email = document.getElementById("email_id");
   const formContainer = document.getElementById("login_form_id");
-  const loginBtn = document.getElementById("log_in_btn_id");
   const viewDashboard = document.getElementById("view_dashboard_id");
   viewDashboard.removeAttribute("href");
-  //   loginBtn.disabled = true;
   user.addEventListener("input", function (event) {
     userErrorView(user);
   });
@@ -15,7 +13,6 @@ export function loginFunction() {
   });
 
   formContainer.onsubmit = function (event) {
-    console.log("clicked form submit");
     let checkingTargets = [user, email];
     checkErrorOnformsubmit(checkingTargets);
     event.preventDefault();
@@ -47,7 +44,6 @@ export function checkErrorOnformsubmit(checkingTargets) {
   });
   errorBooleanBalues.forEach((x) => {
     const element = document.getElementById(x.elementId);
-    console.log(`value : ${element.value}`);
   });
   //displaying error message based on the errorElement.
   displayErrorMessage(errorBooleanBalues);
@@ -69,13 +65,11 @@ export function displayErrorMessage(errorBooleanBalues) {
 
   //no inputs have error
   if (noErrors) {
-    console.log("no errors");
     noErrorsFunction(errorBooleanBalues);
   }
 
   //all inputs have error
   if (allInputHaveError) {
-    console.log("all inputs have error ");
     displayAllelementError(errorBooleanBalues);
   }
 
@@ -90,8 +84,6 @@ export function displayErrorMessage(errorBooleanBalues) {
 function selectingErrorDisplay(errorBooleanBalues) {
   errorBooleanBalues.forEach((x) => {
     if (x.errorElement === true) {
-      //get the element and its next sibling and only display the error message for them.
-      // console.log(`element id : ${x.elementId}`);
       const element = document.getElementById(x.elementId);
       const errorSibling = element.nextElementSibling;
       displayBorderError(element);
@@ -122,11 +114,9 @@ function noErrorsFunction(errorBooleanBalues) {
  * @param {*} errorBooleanBalues
  */
 function displayAllelementError(errorBooleanBalues) {
-  console.log(`inside display all element error`);
   errorBooleanBalues.forEach((x) => {
     const element = document.getElementById(x.elementId);
     let adjacentErrorElement = element.nextElementSibling;
-    // console.log(`adjacent error id : ${adjacentErrorElement.id}`);
     displayError(adjacentErrorElement);
     displayBorderError(element);
   });
@@ -137,7 +127,6 @@ function displayAllelementError(errorBooleanBalues) {
  * @param {*} element
  */
 function displayError(element) {
-  console.log(`element id : ${element.id}`);
   element.classList.add("display_error");
 }
 
@@ -174,11 +163,7 @@ function checkUser(userNameValue, emailValue) {
 /**
  * goToDashboard : function, will redirect us to the dashboard page using window.location.href.
  */
-function goToDashboard(userNameValue, emailValue) {
-  /*
-    window.location.href = `nextPage.htm?room=${encodeURIComponent(roomName
-    )}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;
-  */
+function goToDashboard() {
   window.location.href = `dashboard.htm`;
 }
 
@@ -188,15 +173,12 @@ function goToDashboard(userNameValue, emailValue) {
  * @param {*} userNameValue
  */
 function checkUserName(emailValue, userNameValue) {
-  // const viewDashboard = document.getElementById("view_dashboard_id");
   const arr = returnUserData();
-  console.log(`user name : ${userNameValue}`);
   const userExists = arr.some(
     (user) =>
       user.value.userName === userNameValue && user.value.email === emailValue
   );
   if (userExists) {
-    console.log(`user exists`);
     //if the user exists, the user will be redirected to the dashboard page.
     persistingEmailId(emailValue);
     goToDashboard(userNameValue, emailValue);
@@ -243,7 +225,6 @@ function checkExistingUser(email_value) {
  * @param {*} emailValue
  */
 function persistUserData(userNameValue, emailValue) {
-  console.log("inside persist user data");
   let user_data = JSON.parse(localStorage.getItem("user_details")) || [];
   let profile = `https://preview.redd.it/solo-leveling-trailer-been-out-for-a-min-how-are-people-v0-0ydwudqtwqpa1.png?auto=webp&s=082b91b16d2b7fd8f7513208c654828ddbf50223`;
 
