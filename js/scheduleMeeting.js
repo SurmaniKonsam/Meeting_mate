@@ -178,7 +178,7 @@ function validateAndPersistMeetingData() {
   const isChecked = checkbox.checked;
   const checkboxValue = isChecked ? true : false;
 
-  const upcomingMeetings = {
+  const upcomingMeetingsListData = {
     roomName: roomName,
     meetingName: meetingName,
     organizer: organizer,
@@ -219,7 +219,7 @@ function validateAndPersistMeetingData() {
 
     //if its so, now time to persist the data in the local storage.
     let meetingList = [];
-    meetingList.push(upcomingMeetings);
+    meetingList.push(upcomingMeetingsListData);
     let emailValue = getLoggedInUserEmailId();
     const upcomingMeetingData = {
       email: emailValue,
@@ -373,7 +373,8 @@ function validateAndPersistMeetingData() {
           bookedSlots,
           upcoming_meeting_list,
           upcomingMeetings,
-          upcoming_meeting_index_via_email
+          upcoming_meeting_index_via_email,
+          upcomingMeetingsListData
         );
 
         //here bookedSlots is being returned and assigned to the indexfoundViaDate index.
@@ -409,11 +410,11 @@ function validateAndPersistMeetingData() {
     }
   }
 
-  //setting the local storage.
-  localStorage.setItem(
-    "upcoming_meetings",
-    JSON.stringify(fetchedUpcomingMeetings)
-  );
+  // //setting the local storage.
+  // localStorage.setItem(
+  //   "upcoming_meetings",
+  //   JSON.stringify(fetchedUpcomingMeetings)
+  // );
 }
 
 function addTimeSlots(
@@ -424,26 +425,28 @@ function addTimeSlots(
   bookedSlots,
   upcoming_meeting_list,
   upcomingMeetings,
-  upcoming_meeting_index_via_email
+  upcoming_meeting_index_via_email,
+  upcomingMeetingsListData
 ) {
   let inserted = false;
   for (let i = 0; i < bookedTimeSlots.length; i++) {
     if (endingTime < bookedTimeSlots[i].startingTime) {
       bookedSlots.splice(i, 0, bookedSlotsData);
-      upcoming_meeting_list.push(upcomingMeetings);
+      upcoming_meeting_list.push(upcomingMeetingsListData);
       inserted = true;
       break;
     } else if (
       startingTime === bookedTimeSlots[i].startingTime &&
       endingTime === bookedTimeSlots[i].endingTime
     ) {
-      upcoming_meeting_list.push(upcomingMeetings);
+      upcoming_meeting_list.push(upcomingMeetingsListData);
       bookedSlots.splice(i + 1, 0, bookedSlotsData);
       inserted = true;
       break;
     }
   }
   if (!inserted) {
+    upcoming_meeting_list.push(upcomingMeetingsListData);
     bookedSlots.push(bookedSlotsData); // Insert at the end if not inserted earlier
   }
 
@@ -455,7 +458,7 @@ function addTimeSlots(
    * This piece of code could also be removed.
    * Setting the local storage "upcoming_meetings" again.
    */
-  // localStorage.setItem("upcoming_meetings", JSON.stringify(upcomingMeetings));
+  localStorage.setItem("upcoming_meetings", JSON.stringify(upcomingMeetings));
   return bookedSlots;
 }
 
