@@ -92,7 +92,7 @@ export function errorView(element) {
 }
 
 /**
- * displayError : function, will be displayed for if all the error element is true.
+ * displayError : function, will be displayed for if all the error element is true, or the element value is empty.
  * @param {*} adjacentErrorElement
  * @param {*} element
  */
@@ -106,6 +106,9 @@ export function displayError(adjacentErrorElement, element) {
       break;
     case "ending_time_id":
       adjacentErrorElement.textContent = "Ending time selection is empty!!!";
+      break;
+    case "meeting_name_id":
+      adjacentErrorElement.textContent = "Meeting name is empty";
       break;
   }
   //if all the values are empty error_none is removed.
@@ -146,15 +149,23 @@ export function meetingDateValidation(elementId) {
   let meetingDate = document.getElementById(elementId);
   let dateErrorElement = meetingDate.nextElementSibling;
 
+  //starting time and ending time input fields
+
   const selectedDateValue = new Date(dateValue);
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
   selectedDateValue.setHours(0, 0, 0, 0);
 
   //now time for validation.
-  if (selectedDateValue.getTime() < currentDate.getTime() || dateValue === "") {
+  if (selectedDateValue.getTime() < currentDate.getTime()) {
+    // console.log(`selected date is less than the current date`);
     dateErrorElement.classList.remove("error_none");
     dateErrorElement.textContent = `Selected date must be greater than the current Date`;
+    dateErrorElement.classList.add("error_style");
+    return false;
+  } else if (dateValue === "") {
+    dateErrorElement.classList.remove("error_none");
+    dateErrorElement.textContent = `Selected date is empty!!!`;
     dateErrorElement.classList.add("error_style");
     return false;
   } else {

@@ -382,7 +382,7 @@ function addingMeetingFunction() {
 function searchCardFunction(elements) {
   const searchRoomId = document.getElementById("search_room_id");
   const roomNotAvailableContainer = document.getElementById(
-    "room_not_available_id"
+    "meeting_rooms_not_available_id"
   );
   let timeoutId;
   // console.log(`length of element : ${elements.length}`);
@@ -403,6 +403,7 @@ function searchCardFunction(elements) {
         let elementText = x.textContent.toLowerCase();
         if (elementText.includes(searchText) || searchText === "") {
           x.parentNode.style.display = "block";
+          roomNotAvailableContainer.style.display = "none";
           matchFound = true;
         } else {
           x.parentNode.style.display = "none";
@@ -412,8 +413,11 @@ function searchCardFunction(elements) {
       // If no match is found, display all parent nodes
       if (!matchFound && searchText !== "") {
         elements.forEach((x) => {
-          x.parentNode.style.display = "block";
+          x.parentNode.style.display = "none";
         });
+        roomNotAvailableContainer.style.display = "flex";
+        roomNotAvailableContainer.textContent = "No Room To Display";
+        roomNotAvailableContainer.classList.add("room_not_available_style");
       }
     }, 1); // Adjust the delay (in milliseconds) as needed
   });

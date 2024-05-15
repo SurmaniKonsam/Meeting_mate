@@ -8,7 +8,7 @@ import {
   meetingDateValidation,
   displayInvalidErrorTimeField,
   optionSelectionValidation,
-} from "../utils/currentTimeUtil.js";
+} from "../utils/scheduelMeetingUtil.js";
 
 /**
  * bookNowBtnFunction : function, is a btn being handling event onsubmit for the form id 'login_form_id'.
@@ -47,11 +47,17 @@ function bookNowBtnFunction() {
     endTimeInput,
   ];
 
-  let validatedFields = false;
   scheduleForm.onsubmit = function (event) {
-    console.log("form submitted");
+    console.log(`form submitted `);
     event.preventDefault();
-    checkErrors(checkingTargets, validatedFields);
+
+    //need starting time and ending time validation here.
+    showAlertAndDisableTime(
+      startingTime,
+      endTimeInput,
+      meetingDate,
+      checkingTargets
+    );
   };
 }
 
@@ -60,7 +66,7 @@ function bookNowBtnFunction() {
  * alternative length of the element value === 0
  * @param {*} checkingTargets
  */
-function checkErrors(checkingTargets, validatedFields) {
+function checkErrors(checkingTargets) {
   //all the elements validation must be done here.
   let errorBooleanBalues = [];
   checkingTargets.forEach((x) => {
@@ -84,7 +90,6 @@ function checkErrors(checkingTargets, validatedFields) {
 
   //display error message will be used to display error based on the boolean value thus passed.
   displayErrorMessage(errorBooleanBalues);
-  validatedFields = true;
 }
 
 /**
@@ -99,7 +104,6 @@ function displayErrorMessage(errorBooleanBalues) {
 
   //all inputs have error
   if (allInputsAreEmtpy) {
-    console.log("all inputs are empty ");
     everyInputFieldEmptyError(errorBooleanBalues);
   }
 
@@ -109,13 +113,14 @@ function displayErrorMessage(errorBooleanBalues) {
 
 //when some element's value is empty.
 function selectingErrorDisplay(errorBooleanBalues) {
-  console.log("\n");
   errorBooleanBalues.forEach((x) => {
     const element = document.getElementById(x.elementId);
     const adjacentErrorElement = element.nextElementSibling;
     if (x.errorElement === true) {
+      //for the element which have error or is empty.
       displayError(adjacentErrorElement, element);
     } else {
+      //this block will repeat for everytime if the input fields have a value.
       adjacentErrorElement.classList.add("error_none");
       element.classList.remove("border_error");
       viewErrorElementsWithValue(x.elementId);
@@ -126,7 +131,12 @@ function selectingErrorDisplay(errorBooleanBalues) {
   allRequiredFieldInputValidation();
 }
 
+/**
+ * allRequiredFieldInputValidatio : function, will validated all the input fields.
+ */
 function allRequiredFieldInputValidation() {
+  const roomNameValidated = viewErrorElementsWithValue("rooms_id");
+  const organiserValidated = viewErrorElementsWithValue("organizer_id");
   const meetingNameValidated = viewErrorElementsWithValue("meeting_name_id");
   const meetingDateValidated = viewErrorElementsWithValue("meeting_date_id");
   const startingTimeValidated = viewErrorElementsWithValue("starting_time_id");
@@ -134,6 +144,8 @@ function allRequiredFieldInputValidation() {
 
   // Check if all fields are validated
   const allFieldsValidated =
+    roomNameValidated &&
+    organiserValidated &&
     meetingNameValidated &&
     meetingDateValidated &&
     startingTimeValidated &&
@@ -142,10 +154,315 @@ function allRequiredFieldInputValidation() {
   if (allFieldsValidated) {
     // All fields are validated
     console.log("All fields are validated.");
+
+    //time for persistance.
+    validateAndPersistMeetingData();
   } else {
     // At least one field is not validated
     console.log("Validation failed for one or more fields.");
   }
+}
+
+/**
+ * validateAndPersistMeetingData : function, will check for if the meeting data is already booked for the current date
+ * or not.
+ */
+function validateAndPersistMeetingData() {
+  const roomName = document.getElementById("rooms_id").value;
+  const organizer = document.getElementById("organizer_id").value;
+  const meetingName = document.getElementById("meeting_name_id").value;
+  const meetingDate = document.getElementById("meeting_date_id").value;
+  const startingTime = document.getElementById("starting_time_id").value;
+  const endingTime = document.getElementById("ending_time_id").value;
+  const checkbox = document.getElementById("anonymous_meeting_id");
+  const isChecked = checkbox.checked;
+  const checkboxValue = isChecked ? true : false;
+
+  const upcomingMeetings = {
+    roomName: roomName,
+    meetingName: meetingName,
+    organizer: organizer,
+    checkbox: checkboxValue,
+    expiryDate: meetingDate,
+    startingTime: startingTime,
+    endingTime: endingTime,
+  };
+
+  const bookedSlotsData = {
+    roomName: roomName,
+    startingTime: startingTime,
+    endingTime: endingTime,
+  };
+
+  /**
+   * retrieving the upcoming meeting list
+   */
+  let fetchedUpcomingMeetings = getUpcomingMeetings();
+  if (!Array.isArray(fetchedUpcomingMeetings)) {
+    fetchedUpcomingMeetings = []; //converting retrieved object back to array.
+  }
+
+  /**
+   * retrieving time slots in array format
+   */
+  let fetchTimeSlots = getTimeslots();
+  if (!Array.isArray(fetchTimeSlots)) {
+    fetchTimeSlots = [];
+  }
+
+  /*
+    First look for if we have any meeting data in the local storage.
+  */
+  if (fetchedUpcomingMeetings.length === 0 && fetchTimeSlots.length === 0) {
+    console.log("no upcoming meetings in the local storage.");
+    console.log(`time slots is empty`);
+
+    //if its so, now time to persist the data in the local storage.
+    let meetingList = [];
+    meetingList.push(upcomingMeetings);
+    let emailValue = getLoggedInUserEmailId();
+    const upcomingMeetingData = {
+      email: emailValue,
+      upcomingMeetingList: meetingList,
+    };
+    fetchedUpcomingMeetings.push(upcomingMeetingData);
+
+    /**
+     * meetingSlotsData ; constructing data for the meeting slots object.
+     */
+
+    /**
+     * persisting the meeting room data to the bookedSlots.
+     * Since, for a specific date we can have many booked time slots. Hence, it should be of type array.
+     */
+    let bookedSlots = [];
+    bookedSlots.push(bookedSlotsData);
+    const meetingSlotsData = {
+      date: meetingDate,
+      bookedTimeSlots: bookedSlots,
+    };
+    fetchTimeSlots.push(meetingSlotsData);
+
+    /**
+     * set "time_slots"
+     */
+    localStorage.setItem("time_slots", JSON.stringify(fetchTimeSlots));
+
+    /**
+     * set "upcoming_meetings"
+     */
+    localStorage.setItem(
+      "upcoming_meetings",
+      JSON.stringify(fetchedUpcomingMeetings)
+    );
+
+    //we need to set for the time slots here to.
+  } else {
+    console.log("upcoming meetings is not empty.");
+    console.log("time slots is not empty");
+
+    let getTimeSlots = getTimeslots();
+
+    /**
+     * we are finding the index based on the 'date'
+     */
+    let index_found_via_date = getTimeSlots.findIndex(
+      (data) => data.date === meetingDate
+    );
+
+    /*
+    if the fetched index is not negative: it states that we have found our key with the meeting date
+    similar to the selected date.
+    That is if the meeting date is found.
+    Means, the index to persist the new meeting data to the existing data is found.
+    */
+    if (index_found_via_date !== -1) {
+      /**
+       * index_found_via_date : will be used to update the existing data
+       */
+      console.log(`index found via date : ${index_found_via_date}`);
+      /**
+       * finding the object having the same meeting date via the 'meetingDate'
+       * This object fetched selectively out of the meeting date have 'bookedTimeSlots'.
+       * Which we will use for iteration and comparisons.
+       */
+      let time_slots_fetched_data_for_the_selected_date = getTimeSlots.find(
+        (data) => data.date === meetingDate
+      );
+
+      /**
+       * this piece of code will be validated only for if the selected time slots matches exactly as that of the
+       * time slots available in the local storage, for the selected date booked slots.
+       * If the meeting room name matches in the selected date booked slots,
+       * it will give you the index on which the meeting room name was matched in the selected date booked.
+       * Else,
+       * it will return you '0'/
+       */
+      let returnRoomAvailability = roomAvailablity(
+        time_slots_fetched_data_for_the_selected_date.bookedTimeSlots,
+        roomName,
+        startingTime,
+        endingTime
+      );
+
+      // console.log(`return time index : ${returntimeIndex}`);
+
+      let bookedSlots = [];
+      /**
+       * repopulating the booked slots with an empty booked slots, so that it can get populated with a new data
+       * to an existing one.
+       */
+      time_slots_fetched_data_for_the_selected_date.bookedTimeSlots.forEach(
+        (x) => {
+          bookedSlots.push(x);
+        }
+      );
+
+      /**
+       * returntimeIndex : will be either '0' or 'index' on which the roomName is found.
+       * -7 is used to indicate so that the return time index is always true
+       */
+      if (returnRoomAvailability) {
+        alert(`Meeting room available`);
+
+        let updatedBookedSlots = addTimeSlots(
+          time_slots_fetched_data_for_the_selected_date.bookedTimeSlots,
+          startingTime,
+          endingTime,
+          bookedSlotsData,
+          bookedSlots
+        );
+
+        //here bookedSlots is being returned and assigned to the indexfoundViaDate index.
+        fetchTimeSlots[index_found_via_date].bookedTimeSlots =
+          updatedBookedSlots;
+
+        localStorage.setItem("time_slots", JSON.stringify(fetchTimeSlots));
+      } else {
+        alert(`Meeting room not available`);
+        const scheduleForm = document.getElementById("login_form_id");
+        scheduleForm.reset();
+      }
+    } else {
+      //if the meeting date is not found.
+      //we will push new date to the time slots.
+      alert("New meeting date detected!!!");
+      let timeSlots = getTimeslots();
+      let resetTimeSlots = [];
+      timeSlots.forEach((x) => {
+        resetTimeSlots.push(x);
+      });
+
+      let bookedSlots = [];
+      bookedSlots.push(bookedSlotsData);
+
+      const newTimeSlots = {
+        date: meetingDate,
+        bookedTimeSlots: bookedSlots,
+      };
+
+      resetTimeSlots.push(newTimeSlots);
+      localStorage.setItem("time_slots", JSON.stringify(resetTimeSlots));
+    }
+  }
+
+  //setting the local storage.
+  localStorage.setItem(
+    "upcoming_meetings",
+    JSON.stringify(fetchedUpcomingMeetings)
+  );
+}
+
+function addTimeSlots(
+  bookedTimeSlots,
+  startingTime,
+  endingTime,
+  bookedSlotsData,
+  bookedSlots
+) {
+  let inserted = false;
+  for (let i = 0; i < bookedTimeSlots.length; i++) {
+    if (endingTime < bookedTimeSlots[i].startingTime) {
+      bookedSlots.splice(i, 0, bookedSlotsData);
+      inserted = true;
+      break;
+    } else if (
+      startingTime === bookedTimeSlots[i].startingTime &&
+      endingTime === bookedTimeSlots[i].endingTime
+    ) {
+      bookedSlots.splice(i + 1, 0, bookedSlotsData);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) {
+    bookedSlots.push(bookedSlotsData); // Insert at the end if not inserted earlier
+  }
+  return bookedSlots;
+}
+
+/**
+ * returnFoundIndex : will find the index via validating starting time and ending time.
+ * From here, if not meeting room with the selected time slots is found, then it will return 0.
+ * Which will then be used in the if condition to check if the room name is available or not.
+ * Since, the return value if meeting room name not available will always be 0.
+ * The validation will pass for the meeting room excluding the meeting room available in the first index
+ * @param {*} bookedTimeSlots
+ */
+function roomAvailablity(bookedTimeSlots, roomName, startingTime, endingTime) {
+  for (let i = 0; i < bookedTimeSlots.length; i++) {
+    //we need to first check whether the starting time and ending time slots are available.
+    if (
+      bookedTimeSlots[i].startingTime === startingTime &&
+      bookedTimeSlots[i].endingTime === endingTime
+    ) {
+      console.log("inside the if block");
+      console.log(`index : ${i}`);
+      if (bookedTimeSlots[i].roomName === roomName) {
+        console.log(`room with same name found!!!`);
+        //room with same name found return true.
+        return false;
+      }
+    } else if (
+      startingTime > bookedTimeSlots[i].startingTime &&
+      endingTime <= bookedTimeSlots[i].endingTime
+    ) {
+      alert("selected time slot collides!!!");
+      return false;
+    }
+    /**
+     * if for the collision false is returned from here, i don't have to validate in the addTimeSlots anymore.
+     */
+  }
+  return true;
+}
+
+/**
+ * getTimeslots : function, wil return the upcoming time slots for which the user has persisted the meetings as per the
+ * selected date.
+ * the object thus persisted in the time_slots will be as:
+ * {
+ *    date : date,
+ *    upcoming_meetings : []
+ *    //where the object inside the upcoming meetings will be as :
+ *     {
+ *        room_name : room_name,
+ *        starting_time : starting_time,
+ *        ending_time : ending_time
+ *      }
+ * }
+ * 'date' key : will be of two type:
+ * A current date.
+ * A future date.
+ * A current date : a current date, will take up the time slots in which the starting and the ending time have been compared
+ * with the current time.
+ * A future date : a future date, there will be no comparison with the current time, the only comparison will be made between
+ * the starting time and the ending time.
+ * @returns
+ */
+function getTimeslots() {
+  let timeSlots = JSON.parse(localStorage.getItem("time_slots")) || [];
+  return timeSlots;
 }
 
 /**
@@ -154,15 +471,16 @@ function allRequiredFieldInputValidation() {
  * @param {*} elementId
  */
 function viewErrorElementsWithValue(elementId) {
+  // console.log(`validating all fields with value.`);
   let validatedAllfield = true;
   // console.log(`before all validation : ${validatedAllfield}`);
   switch (elementId) {
     //meeting name validation completed.
     case "rooms_id":
-      optionSelectionValidation(elementId);
+      validatedAllfield = optionSelectionValidation(elementId);
       break;
     case "organizer_id":
-      organizerValidation(elementId);
+      validatedAllfield = optionSelectionValidation(elementId);
       break;
     case "meeting_name_id":
       validatedAllfield = meetingNameValidation(elementId) && validatedAllfield;
@@ -184,14 +502,6 @@ function viewErrorElementsWithValue(elementId) {
   return validatedAllfield;
 }
 
-function organizerValidation(elementId) {
-  const organiserElementValue = document.getElementById(elementId).value;
-  if (organiserElementValue === "") {
-    return false;
-  }
-  return true;
-}
-
 /**
  * endingTimeIdValidation : function, endingTime validation.
  * this cannot be made util, since the ending time should be compared with the starting time.
@@ -200,17 +510,53 @@ function organizerValidation(elementId) {
  */
 function endingTimeIdValidation(elementId) {
   let endingTimeElement = document.getElementById(elementId);
-  let endingTimeErrorElement = endingTimeElement.nextElementSibling;
+
+  let selectedDate = document.getElementById("meeting_date_id").value;
+
+  //current date value.
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  let currentDateValueInhrs = currentDate.getTime();
+
+  //selected date value.
+  const selectedDateValue = new Date(selectedDate);
+  selectedDateValue.setHours(0, 0, 0, 0);
+  let selectedDateValueTimeinHrs = selectedDateValue.getTime();
+
+  //if the current date is equal to the selected date, then the current time validation should be done.
+  if (selectedDateValueTimeinHrs === currentDateValueInhrs) {
+    return endtimeValidationIfSelectedDateIsEqualToTheCurrentDate(
+      endingTimeElement
+    );
+  } else if (selectedDateValueTimeinHrs > currentDateValueInhrs) {
+    return endtimeValidationIfSelectedDateIsGreaterThanTheCurrentDate(
+      endingTimeElement
+    );
+  }
+}
+
+/**
+ * endtimeValidationIfSelectedDateIsGreaterThanTheCurrentDate : function, this will validate the ending time with the
+ * starting time.
+ * If all the fields are validated properly then it will return true,
+ * else for every failed validation we will have returned false.
+ * @param {*} endingTimeElement
+ * @returns
+ */
+function endtimeValidationIfSelectedDateIsGreaterThanTheCurrentDate(
+  endingTimeElement
+) {
+  let startingTimeElement = document.getElementById("starting_time_id");
+  let startingTimeErrorElement = startingTimeElement.nextElementSibling;
+  let startingTimeValue = startingTimeElement.value;
+
+  /**
+   * ending time elements/ending time error element.
+   */
   let endingTimeValue = endingTimeElement.value;
-
-  // Convert the current time to a string in HH:MM format
-  let currentFormattedTime = getCurrentTime();
-
-  //validate starting time
-  if (endingTimeValue <= currentFormattedTime) {
-    let errorMessage = `Ending time should be greater than current time`;
-    // setValidateFalse();
-    //this can be made util
+  let endingTimeErrorElement = endingTimeElement.nextElementSibling;
+  if (endingTimeValue === "") {
+    let errorMessage = "Ending time is empty !!!";
     displayInvalidErrorTimeField(
       endingTimeErrorElement,
       endingTimeElement,
@@ -218,74 +564,122 @@ function endingTimeIdValidation(elementId) {
     );
     return false;
   } else {
-    //starting time value for comparison
-    let startingTimeValue = document.getElementById("starting_time_id").value;
     endingTimeErrorElement.style.display = "none";
-
-    //checking starting time value.
     if (startingTimeValue === "") {
-      // setValidateFalse();
+      let errorMessage = "Starting time is empty !!!";
+      displayInvalidErrorTimeField(
+        startingTimeErrorElement,
+        startingTimeElement,
+        errorMessage
+      );
       return false;
     } else {
-      return endingTimeComparisonWithEndingtime(
-        startingTimeValue,
-        endingTimeValue
-      );
+      startingTimeErrorElement.style.display = "none";
+      if (endingTimeValue < startingTimeValue) {
+        let errorMessage = "Ending time should be greater than the ending time";
+        displayInvalidErrorTimeField(
+          endingTimeErrorElement,
+          endingTimeElement,
+          errorMessage
+        );
+        return false;
+      } else {
+        startingTimeErrorElement.style.display = "none";
+        endingTimeErrorElement.style.display = "none";
+        return true;
+      }
     }
   }
 }
 
 /**
- * endingTimeComparisonWithEndingtime : function, will do the comparison between the ending time greater than the
- * current time, with the starting time value.
- * If the value of the starting time is greater than the ending time, then the ending time shall make appear
- * the error message.
- * @param {*} startingTimeValue
- * @param {*} endingTime
+ * endtimeValidationIfSelectedDateIsEqualToTheCurrentDate : function, if the selected date is equal to the current date
+ * the validation for the ending time value with the current time and the starting time will be done here.
+ * @param {*} endingTimeElement
+ * @returns
  */
-function endingTimeComparisonWithEndingtime(
-  startingTimeValue,
-  endingTimeValue
+function endtimeValidationIfSelectedDateIsEqualToTheCurrentDate(
+  endingTimeElement
 ) {
-  const endingTimeElement = document.getElementById("ending_time_id");
+  let startingTimeValue = document.getElementById("starting_time_id").value;
+  let endingTimeErrorElement = endingTimeElement.nextElementSibling;
+  let endingTimeValue = endingTimeElement.value;
+  let currentFormattedTime = getCurrentTime();
 
-  //adjacent error element.
-  const endingtimeErrorElement = endingTimeElement.nextElementSibling;
-
-  if (endingTimeValue <= startingTimeValue) {
-    let errorMessage = "Ending time should be greater than the starting time.";
-    // setValidateFalse();
+  if (
+    endingTimeValue >= currentFormattedTime &&
+    endingTimeValue > startingTimeValue
+  ) {
+    endingTimeErrorElement.style.display = "none";
+    return true;
+    /**
+     * step by step
+     * first : the ending time needs to be greater than the current time
+     * if so, then the ending time needs to be greater than the starting time value.
+     */
+  } else if (endingTimeValue < currentFormattedTime) {
+    let errorMessage = "Ending time should be greater than current time";
     displayInvalidErrorTimeField(
-      endingtimeErrorElement,
+      endingTimeErrorElement,
       endingTimeElement,
       errorMessage
     );
     return false;
-  } else {
-    // setValidatedTrue();
-    endingtimeErrorElement.style.display = "none";
-    //now we can persist the data from here.
-    return true;
   }
 }
 
 /**
  * startingTimeValidation : function, starting time validation.
  * starting time must also be validated with the ending time.
+ * startingTim
  * @param {*} elementId
  */
 function startingTimeValidation(elementId) {
+  /**
+   * In this block we will only validate for selected date which is greater than or equal to the current date.
+   */
   let startingTimeElement = document.getElementById(elementId);
-  let startingTimeErrorElement = startingTimeElement.nextElementSibling;
-  let startingTimeValue = startingTimeElement.value;
+  let selectedDate = document.getElementById("meeting_date_id").value;
 
-  // Convert the current time to a string in HH:MM format
+  //current date value.
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  let currentDateValueInhrs = currentDate.getTime();
+
+  //selected date value.
+  const selectedDateValue = new Date(selectedDate);
+  selectedDateValue.setHours(0, 0, 0, 0);
+  let selectedDateValueTimeinHrs = selectedDateValue.getTime();
+
+  //current time
   let currentFormattedTime = getCurrentTime();
 
-  //validate starting time
-  if (startingTimeValue <= currentFormattedTime) {
-    let errorMessage = "Starting time must be greater than current time";
-    // setValidateFalse();
+  //if the current date is equal to the selected date, then the current time validation should be done.
+  if (selectedDateValueTimeinHrs === currentDateValueInhrs) {
+    return timeValidationIfSelectedDateIsEqualtoCurrentDate(
+      currentFormattedTime,
+      startingTimeElement
+    );
+  } else if (selectedDateValueTimeinHrs > currentDateValueInhrs) {
+    return timeValidationIfTheSelectedDateIsGreaterThanTheCurrentDate(
+      startingTimeElement
+    );
+  }
+}
+
+/**
+ * timeValidationIfTheSelectedDateIsGreaterThanTheCurrentDate : function, will validate for the starting time
+ * when the selected date is greater than the current date.
+ * @param {*} startingTimeElement
+ * @returns
+ */
+function timeValidationIfTheSelectedDateIsGreaterThanTheCurrentDate(
+  startingTimeElement
+) {
+  let startingTimeValue = startingTimeElement.value;
+  let startingTimeErrorElement = startingTimeElement.nextElementSibling;
+  if (startingTimeValue === "") {
+    let errorMessage = "Starting time is empty!!!";
     displayInvalidErrorTimeField(
       startingTimeErrorElement,
       startingTimeElement,
@@ -293,11 +687,62 @@ function startingTimeValidation(elementId) {
     );
     return false;
   } else {
+    /**
+     * starting value is not empty, now we need to check only with the ending time value.
+     */
+    startingTimeErrorElement.style.display = "none";
+    let endingTimeElement = document.getElementById("ending_time_id");
+    let endingTimeValue = endingTimeElement.value;
+    let endingTimeErrorElement = endingTimeElement.nextElementSibling;
+    if (endingTimeValue === "") {
+      let errorMessage = "Ending element is empty !!!";
+      displayInvalidErrorTimeField(
+        endingTimeErrorElement,
+        endingTimeElement,
+        errorMessage
+      );
+      return false;
+    } else {
+      if (endingTimeValue > startingTimeValue) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+}
+
+/**
+ * timeValidationIfSelectedDateIsEqualtoCurrentDate : function, if the selected date is equal to the current date, then
+ * the validation for the selected time will be done with the current time.
+ * It means, the selected time should be either equal to or greater than the current time, if the selected date
+ * is equal to the current date.
+ * @param {*} currentFormattedTime
+ * @param {*} startingTimeElement
+ * @returns
+ */
+function timeValidationIfSelectedDateIsEqualtoCurrentDate(
+  currentFormattedTime,
+  startingTimeElement
+) {
+  let startingTimeErrorElement = startingTimeElement.nextElementSibling;
+  let startingTimeValue = startingTimeElement.value;
+
+  //starting time value if less than the current formatted time.
+  if (startingTimeValue < currentFormattedTime) {
+    let errorMessage = "Starting time should be greater than current time";
+    displayInvalidErrorTimeField(
+      startingTimeErrorElement,
+      startingTimeElement,
+      errorMessage
+    );
+    return false;
+  } else {
+    //starting time is greater than the current formated time, needs to be now compared with the ending time.
     let endingTimeValue = document.getElementById("ending_time_id").value;
     //now same comparison of the starting time with the ending time value.
 
     if (endingTimeValue === "") {
-      // setValidateFalse();
       startingTimeErrorElement.style.display = "none";
       return false;
     } else {
@@ -307,6 +752,55 @@ function startingTimeValidation(elementId) {
       );
     }
   }
+}
+
+//to show alert if the date is not selected.
+function showAlertAndDisableTime(
+  startingTime,
+  endTimeInput,
+  meetingDate,
+  checkingTargets
+) {
+  try {
+    if (meetingDate.value === "") {
+      alert("meeting date value is empty");
+      emptyTimeInputs(startingTime, endTimeInput);
+      checkErrors(checkingTargets);
+    } else {
+      //else if the meeting date is not empty.
+      const currentDate = new Date();
+      const selectedDate = new Date(meetingDate.value);
+
+      const currentDateStr = currentDate.toISOString().split("T")[0];
+      const selectedDateStr = selectedDate.toISOString().split("T")[0];
+
+      // console.log(`comparing : ${currentDateStr > selectedDateStr}`);
+
+      if (selectedDateStr < currentDateStr) {
+        emptyTimeInputs(startingTime, endTimeInput);
+        checkErrors(checkingTargets);
+      } else {
+        /**
+         * first : for the date equal to the current date
+         * second : for the date greater than the current date.
+         */
+        console.log("date OK needs validation!!!");
+        checkErrors(checkingTargets);
+      }
+    }
+  } catch (e) {
+    console.log(`error : ${e.errorMessage}`);
+  }
+}
+
+/**
+ * disableTimeInputs : functiion, will disable the time input if the selected date is less than the current date.
+ * @param {*} startingTime
+ * @param {*} endTimeInput
+ */
+function emptyTimeInputs(startingTime, endTimeInput) {
+  startingTime.value = "";
+  endTimeInput.value = "";
 }
 
 /**
@@ -333,7 +827,6 @@ function startingTimeComparisonWithEndingTime(
   } else {
     startingTimeErrorElement.style.display = "none";
     // setValidatedTrue();
-    //time to persist from here.
     return true;
   }
 }
@@ -350,39 +843,6 @@ function everyInputFieldEmptyError(errorBooleanBalues) {
 }
 
 /**
- * persistUserMeetingRoomDetails : function, after validation of 'startingTime','expiry' and 'endTimeValue'.
- * The function mentioned, will be creating an object for persisting into the local storage key name : 'upcoming_meetings'
- * The value used to structured the object will be passed onto the 'setUpcomingMeetings(upcomingMeetings)' : function.
- * for persisting into the local storage.
- * @param {*} startingTime
- * @param {*} expiry
- * @param {*} endTimeValue
- */
-function persistUserMeetingRoomDetails(startingTime, expiry, endTimeValue) {
-  console.log("persisting room details");
-  const roomName = document.getElementById("rooms_id");
-  const organizer = document.getElementById("organizer_id");
-  const meetingName = document.getElementById("meeting_name_id");
-  const checkbox = document.getElementById("anonymous_meeting_id");
-  const isChecked = checkbox.checked;
-  const value = isChecked ? true : false;
-  // console.log(`return checkbox value : ${returnCheckboxValue}`);
-
-  const upcomingMeetings = {
-    roomName: roomName.value,
-    meetingName: meetingName.value,
-    organizer: organizer.value,
-    checkbox: value,
-    expiryDate: expiry,
-    startingTime: startingTime,
-    endingTime: endTimeValue,
-  };
-
-  //fetchMeetingDetails(upcomingMeetings);
-  setUpcomingMeetings(upcomingMeetings);
-}
-
-/**
  * loggedInUserEmailId : function, returning logged in user email id.
  * @returns
  * Its a util function.
@@ -390,112 +850,6 @@ function persistUserMeetingRoomDetails(startingTime, expiry, endTimeValue) {
 function getLoggedInUserEmailId() {
   let emailId = localStorage.getItem("email");
   return emailId;
-}
-
-/**
- * setUpcomingMeetings : function, will set the local storage key named 'upcoming_meetings' to be persisted with the passed on
- * argument : which is the structured object data.
- * @param {*} upcomingMeetings
- */
-function setUpcomingMeetings(upcomingMeetings) {
-  let fetchedUpcomingMeetings = getUpcomingMeetings();
-  if (!Array.isArray(fetchedUpcomingMeetings)) {
-    fetchedUpcomingMeetings = []; //converting retrieved object back to array.
-  }
-
-  /*
-    fetchedUpcomingMeetings.length : if length is 0, we will structure the object for the key 'upcoming_meetings'.
-  */
-  if (fetchedUpcomingMeetings.length === 0) {
-    //this piece of code is to persist the meeting details.
-    let meetingList = [];
-    meetingList.push(upcomingMeetings);
-    let emailValue = getLoggedInUserEmailId();
-    const upcomingMeetingData = {
-      email: emailValue,
-      upcomingMeetingList: meetingList,
-    };
-    fetchedUpcomingMeetings.push(upcomingMeetingData);
-
-    localStorage.setItem(
-      "upcoming_meetings",
-      JSON.stringify(fetchedUpcomingMeetings)
-    );
-  } else {
-    /*
-      Else, if the length is > 0, we will pass on the structured upcoming meeting passed as argument, for validation in 
-      function : findUpcomingMeetingDetailsViaemail
-    */
-    findUpcomingMeetingDetailsViaemail(upcomingMeetings);
-  }
-}
-
-/**
- * fetchUpcomingmeetingData : function used to persist the meeting list data into the local storage named : upcoming_meetings
- * Now, since the time will always be different then the current one we don't need to sort or fetch the unique meeting list
- * data.
- * The upcoming_meeting key, will be validated over in this function to check if it exist in the local storage. Which is
- * validated via the findIndex, function.
- * Using findIndex, we wil either update the key 'upcomingMeetingList'.
- * else,
- * we will be restructing the object of the
- * 'upcoming_meetings' with a fresh structure, with the key 'upcomingMeetingList' with the latest submitted form data.
- * Which is 'upcomingMeetings'.
- * Its a success.
- * @param {*} upcomingMeetings
- */
-function findUpcomingMeetingDetailsViaemail(upcomingMeetings) {
-  //problem is with the email id
-  let emailId = getLoggedInUserEmailId();
-  let fetchUpcomingmeetingData = getUpcomingMeetings();
-
-  //here we are finding the index based on the email id.
-  let meeting_fetched_data_index = fetchUpcomingmeetingData.findIndex(
-    (data) => data.email === emailId
-  );
-
-  //find the upcoming meeting data so that we can re-initialise the upcoming_meeting list
-  let meeting_fetched_data = fetchUpcomingmeetingData.find(
-    (data) => data.email === emailId
-  );
-
-  let meetingData = [];
-
-  //  !== -1, if the fetched object is found
-  if (meeting_fetched_data_index !== -1) {
-    /*
-      The following iteration has been done to, push the existing upcoming meeting data to the array 'meetingData' first.
-      Then,
-      It will push the new upcoming meetings to the meetin data.
-    */
-    meeting_fetched_data.upcomingMeetingList.forEach((x) => {
-      meetingData.push(x);
-    });
-
-    //new meeting data pushed with the existing one.
-    meetingData.push(upcomingMeetings);
-    fetchUpcomingmeetingData[meeting_fetched_data_index].upcomingMeetingList =
-      meetingData;
-    // window.location.href = "dashboard.htm";
-  } else {
-    //constructing upcoming meeting details again if email, or index we are looking for is not found.
-    //the else section will restructure the upcoming_meetings key to initial one, where the user doesn't have any meeting list.
-    meetingData.push(upcomingMeetings);
-
-    //restructuring the object to initial phase, where the meeting data is pushed with the new upcoming meeting data.
-    const upcomingMeetingData = {
-      email: emailId,
-      upcomingMeetingList: meetingData,
-    };
-    fetchUpcomingmeetingData.push(upcomingMeetingData);
-  }
-
-  //at the end re-setting the upcoming_meetings
-  localStorage.setItem(
-    "upcoming_meetings",
-    JSON.stringify(fetchUpcomingmeetingData)
-  );
-  // window.location.href = "dashboard.htm";
 }
 
 /**

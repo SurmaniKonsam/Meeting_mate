@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alert box</title>
+  </head>
+  <body>
+    <script>
+      // Display a confirmation dialog box
+      let result = window.confirm("Do you want to proceed?");
+
+      // Check the user's response
+      if (result) {
+        // User clicked 'OK'
+        alert("You clicked OK!");
+      } else {
+        // User clicked 'Cancel' or closed the dialog
+        alert("You clicked Cancel or closed the dialog!");
+      }
+    </script>
+  </body>
+</html>
