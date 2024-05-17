@@ -1,34 +1,4 @@
 /**
- * getParameterByName will fetch the queryParam value that is room from the htm page click event 'selectMeetingRoom'
- * This can be exported to.
- * @param {*} name
- * @param {*} url
- * @returns
- */
-function getParameterByName(name, url) {
-  if (!url) url = window.location.href;
-  name = name.replace(/[\[\]]/g, "\\$&");
-  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
-  return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-//Get the roomName from the query parameter
-let roomName = getParameterByName("room");
-
-//Get the roomLength.
-let roomLength = getParameterByName("roomLength");
-
-//Get the loginState
-let loginState = getParameterByName("loginState");
-
-console.log(
-  `room name via query param: ${roomName}\nroom length : ${roomLength}\nlogin state : ${loginState}`
-);
-
-/**
  * returnRoomData will return all the room data stored in the local storage.
  * */
 function returnRoomData() {
@@ -65,11 +35,9 @@ function constructingRoomAvailablityPage(roomAvailability, amenityHeader) {
  */
 function roomAvailabilityStyling(roomAvailability, roomAvailabilityContainer) {
   if (roomAvailability === true) {
-    console.log(`room is available`);
     roomAvailabilityContainer.textContent = "Room is Available";
     roomAvailabilityContainer.classList.add("room_available_style");
   } else {
-    console.log(`room is not available`);
     roomAvailabilityContainer.textContent = "Room is Not Available";
     roomAvailabilityContainer.classList.add("room_not_available_style");
   }
@@ -107,7 +75,6 @@ function confirmLoginFunction() {
   const loginContainerId = document.getElementById("login_container_id");
   confirmLogin.addEventListener("click", function () {
     loginContainerId.style.display = "none";
-    /*window.location.href = `nextPage.htm?room=${encodeURIComponent(roomName)}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;*/
     window.location.href = `index.htm`;
   });
 }
@@ -117,12 +84,13 @@ crossSignLogin();
 confirmLoginFunction();
 
 /**
- * checkRoomName(roomName) : double checking if room name is there or not in the local storage
+ * checkRoomName() : double checking if room name is there or not in the local storage
  * */
-function checkRoomName(roomName) {
+function checkRoomName() {
   const arr = returnRoomData();
   let roomAvailability;
   let amenityHeader;
+  let roomName = fetchRoomName();
   arr.forEach((x) => {
     let room = x.value.roomName;
     let fetchedRoomName = room.split(" ");
@@ -137,4 +105,12 @@ function checkRoomName(roomName) {
   });
 }
 
-checkRoomName(roomName);
+/**
+ * fetchRoomName : function, will set the room_name each time the room name is clicked.
+ */
+function fetchRoomName() {
+  let roomName = localStorage.getItem("room_name");
+  return roomName;
+}
+
+checkRoomName();

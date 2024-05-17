@@ -2,7 +2,6 @@
  * selectMeetingRoom will be added with click event, for constructing room availablity page in the html page : 'nextPage`
  */
 function selectMeetingRoom() {
-  let loginState = true;
   const selectAllRoom = document.querySelectorAll(".meeting_rooms");
   selectAllRoom.forEach((x) => {
     x.addEventListener("click", function (event) {
@@ -29,14 +28,24 @@ function selectMeetingRoom() {
         upcomingMeeting: "",
       };
 
+      /**
+       * persistingRoomName : function, will set new room name to the local storage everytime, the room name has been clicked.
+       */
+      persistingRoomName(lsRoomName);
+
       room_data_details.push(room_data);
       localStorage.setItem("room_details", JSON.stringify(room_data_details));
-      const roomName = encodeURIComponent(lsRoomName);
-      window.location.href = `nextPage.htm?room=${encodeURIComponent(
-        roomName
-      )}&roomLength=${fetchedRoomLength}&loginState=${loginState}`;
+      window.location.href = `nextPage.htm`;
     });
   });
+}
+
+/**
+ * persistingRoomName : function, will persist new room name to key "room_name", everytime the user clicks to the room name
+ * @param {*} roomFullName 
+ */
+function persistingRoomName(roomFullName) {
+  localStorage.setItem("room_name", roomFullName);
 }
 
 selectMeetingRoom();
