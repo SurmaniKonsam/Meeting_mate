@@ -20,9 +20,10 @@
 .login_container {
   height: 600px;
   width: 600px;
-  /* border: 1px solid #000000; */
+  border: 2px solid greenyellow;
+  background-color: rgb(149, 80, 149);
   margin: auto;
-  margin-top: 18vh;
+  margin-top: 15vh;
 }
 
 /*scanner logo styling*/
@@ -99,11 +100,24 @@
   pointer-events: none;
 }
 
-
-.display_error{
-    display: block;
+.display_error {
+  display: block;
 }
 
-.border_error{
-    border: 2px solid #ff0000;
+.border_error {
+  border: 2px solid #ff0000;
+}
+
+@media screen and (max-width: 602px) {
+  .login_media_style {
+    height: 65vh;
+    width: 80vw;
+  }
+}
+
+@media screen and (min-width: 573px) {
+  .login_media_style {
+    height: 70vh;
+    width: 600px;
+  }
 }
