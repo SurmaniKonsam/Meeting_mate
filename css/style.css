@@ -24,6 +24,10 @@
   background-color: rgb(149, 80, 149);
   margin: auto;
   margin-top: 15vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 /*scanner logo styling*/
@@ -35,11 +39,12 @@
 }
 
 .log_in_credential {
-  width: 600px;
+  width: 100%;
   background-color: white;
   margin-top: 30px;
-  height: 355px;
+  height: 55%;
   text-align: center;
+  margin-bottom: 20px;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.075);
 }
 
@@ -68,12 +73,13 @@
     5px 0 5px -5px rgba(0, 0, 0, 0.5), 0 5px 20px -5px rgba(4, 78, 48, 0.836);
 }
 
-.view_rooms_style {
+.view_rooms_btn_style {
   border: none;
   padding: 10px 30px 10px 30px;
   cursor: pointer;
-  margin-left: 235px;
-  margin-top: 20px;
+  /* margin-left: 235px; */
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .error_style {
@@ -108,10 +114,14 @@
   border: 2px solid #ff0000;
 }
 
+/* media queries */
 @media screen and (max-width: 602px) {
   .login_media_style {
     height: 65vh;
     width: 80vw;
+  }
+
+  .login_credentials_media_style {
   }
 }
 
