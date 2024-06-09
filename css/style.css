@@ -20,32 +20,39 @@
 .login_container {
   height: 600px;
   width: 600px;
-  border: 2px solid greenyellow;
-  background-color: rgb(149, 80, 149);
+  /* border: 8px solid greenyellow; */
+  /* background-color: rgb(149, 80, 149); */
   margin: auto;
-  margin-top: 15vh;
+  margin-top: 20vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  /* position: relative; */
 }
 
 /*scanner logo styling*/
 .scanner_style {
-  display: block;
+  /* display: block; */
   /* border: 2px solid green; */
-  height: 85px;
-  margin: auto;
+  height: 4rem;
+  /* margin: auto; */
+  /* position: absolute; */
 }
 
 .log_in_credential {
   width: 100%;
   background-color: white;
-  margin-top: 30px;
-  height: 55%;
+  /* margin-top: 30px; */
+  /* height: 55%; */
   text-align: center;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
+  margin: 19px 0px 8px 0px;
   box-shadow: 10px 10px 5px rgba(0, 0, 0, 0.075);
+}
+
+.logg_in_credential_child_container {
+  margin: 20px 0 20px 0px;
 }
 
 /*user_name container style*/
@@ -53,7 +60,7 @@
   width: 85%;
   border: none;
   border-bottom: 2px solid #3f7776;
-  margin-top: 70px;
+  margin-top: 4vh;
   padding: 10px 0 10px 0;
 }
 
@@ -64,6 +71,7 @@
 .login_btn_style {
   background-color: #3f7776;
   margin-top: 50px;
+  margin-bottom: 14px;
   padding: 10px 0 10px 0;
   border-radius: 5px;
   color: #ffffff;
@@ -117,7 +125,7 @@
 /* media queries */
 @media screen and (max-width: 602px) {
   .login_media_style {
-    height: 65vh;
+    height: 55vh;
     width: 80vw;
   }
 
@@ -127,7 +135,7 @@
 
 @media screen and (min-width: 573px) {
   .login_media_style {
-    height: 70vh;
+    height: 65vh;
     width: 600px;
   }
 }
