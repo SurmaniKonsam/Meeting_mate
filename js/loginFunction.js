@@ -1,14 +1,15 @@
 export function loginFunction() {
+  console.log("inside login ftn")
   const user = document.getElementById("user_name_id");
   const email = document.getElementById("email_id");
   const formContainer = document.getElementById("login_form_id");
   const viewDashboard = document.getElementById("view_dashboard_id");
   viewDashboard.removeAttribute("href");
-  user.addEventListener("input", function (event) {
+  user.addEventListener("input", function () {
     userErrorView(user);
   });
 
-  email.addEventListener("input", function (event) {
+  email.addEventListener("input", function () {
     emailErrorView(email);
   });
 
