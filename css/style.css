@@ -12,7 +12,7 @@
 .wrapper_meeting_mate {
   height: 100vh;
   width: 100vw;
-  border: 2px solid #000000;
+  border: .5px solid #000000;
   background-color: #f8f1f1;
 }
 
@@ -130,7 +130,7 @@
   }
 
   .input_style {
-    font-size: 1.1rem;
+    font-size: 0.9rem;
   }
 
   .login_btn_style {
@@ -153,7 +153,7 @@
   }
 
   .input_style {
-    font-size: 1.3rem;
+    font-size: 1rem;
   }
 
   .login_btn_media {
@@ -204,6 +204,10 @@
     height: 6rem;
   }
 
+  .login_btn_media {
+    padding-bottom: 31px;
+  }
+
   .login_in_button_container {
     margin-top: 34px;
   }
@@ -212,7 +216,7 @@
 /* from ipad pro*/
 @media screen and (min-width: 820px) and (max-width: 1024px) {
   .login_media_style {
-    height: 65vh;
+    height: 60vh;
     width: 90vw;
   }
 
@@ -221,7 +225,7 @@
   }
 
   .user_email_style {
-    margin-top: 140px;
+    margin-top: 110px;
   }
 
   .input_style {
@@ -233,7 +237,8 @@
   }
 
   .login_btn_media {
-    padding-bottom: 50px;
+    padding-bottom: 40px;
+    margin-bottom: 40px;
   }
 
   .anchor_media_style {
@@ -244,21 +249,49 @@
     height: 6rem;
   }
 
-  .login_in_button_container {
-    margin-top: 74px;
+  .login_btn_media {
+    padding-bottom: 41px;
   }
 
-  .view_rooms_media{
+  .login_in_button_container {
+    margin-top: 50px;
+  }
+
+  .view_rooms_media {
     margin-top: 20px;
     height: 80px;
     width: 200px;
   }
 
-  .anchor_media_style{
+  .anchor_media_style {
     font-size: 1.4rem;
   }
 }
 
+@media screen and (min-width: 912px) and (max-width: 1024px) {
+  .input_style {
+    font-size: 1.8rem;
+  }
+
+  .scanner_media_style {
+    height: 8rem;
+  }
+
+  .login_btn_media {
+    padding-bottom: 50px;
+    margin-bottom: 40px;
+  }
+
+  .view_rooms_media {
+    width: 300px;
+    padding: 20px 0 20px 0;
+  }
+
+  .anchor_media_style {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
 
 /* @media screen and (min-width: 820px) {
   .login_credentials_media_style {
