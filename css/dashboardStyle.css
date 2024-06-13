@@ -13,6 +13,10 @@
 .view_room_wrapper_container {
   display: block;
   position: relative;
+  width: 100vw;
+  height: 100vh;
+  /* background-color: #c4bfbf; */
+  /* border: 2px solid #000000; */
 }
 
 .view_room_logo {
@@ -26,9 +30,9 @@
 /*view_logo_image container*/
 .view_logo_image {
   height: 100%;
-  width: 200px;
+  /* width: 200px; */
   /* border: 2px solid red; */
-  padding-left: 30px;
+  padding-left: 6px;
 }
 
 /*view_logo_style*/
@@ -40,13 +44,14 @@
 
 /*meeting rooms container*/
 .wrapper_meeting_mate {
-  height: 1540px;
+  height: 120vh;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   width: 100vw;
   background-color: #f8f1f1;
   display: flex;
   flex-direction: column;
+  /* border: 3px solid green; */
 }
 
 /* for fading out*/
@@ -269,4 +274,62 @@
   justify-content: center;
   font-weight: 700;
   color: #3f7776;
+}
+
+/** media query style **/
+@media screen and (min-width: 360px) and (max-width: 600px) {
+  .meeting_rooms_media_query {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .room_style_media {
+    height: 100%;
+  }
+
+  .meeting_image_container_media_style {
+    height: 85%;
+    width: 100%;
+  }
+
+  .meeting_container_media {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 1024px) {
+  .meeting_rooms_media_query {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .room_style_media {
+    height: 100%;
+  }
+
+  .meeting_image_container_media_style {
+    height: 85%;
+    width: 100%;
+  }
+
+  .meeting_container_media {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .meeting_rooms_media_query {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .room_style_media {
+    height: 100%;
+  }
+
+  .meeting_image_container_media_style {
+    height: 85%;
+    width: 100%;
+  }
+
+  .meeting_container_media {
+    height: 100vh;
+  }
 }

@@ -12,13 +12,13 @@
 .wrapper_meeting_mate {
   height: 100vh;
   width: 100vw;
-  border: .5px solid #000000;
+  border: 0.5px solid #000000;
   background-color: #f8f1f1;
 }
 
 /*login_container_styling and alignment*/
 .login_container {
-  height: 600px;
+  /* height: 600px; */
   width: 600px;
   /* border: 8px solid greenyellow; */
   /* background-color: rgb(149, 80, 149); */
@@ -130,11 +130,11 @@
   }
 
   .input_style {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .login_btn_style {
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .scanner_media_style {
@@ -153,19 +153,19 @@
   }
 
   .input_style {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
-  .login_btn_media {
+  /* .login_btn_media {
     padding-bottom: 34px;
-  }
+  } */
 
   .anchor_media_style {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .scanner_media_style {
-    height: 6rem;
+    height: 5rem;
   }
 }
 
@@ -181,27 +181,27 @@
   }
 
   .user_email_style {
-    margin-top: 70px;
+    margin-top: 50px;
   }
 
   .input_style {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
   }
 
-  .user_name_container {
+  /* .user_name_container {
     margin-top: 30px;
-  }
+  } */
 
   .login_btn_media {
     padding-bottom: 34px;
   }
 
   .anchor_media_style {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .scanner_media_style {
-    height: 6rem;
+    height: 5rem;
   }
 
   .login_btn_media {
@@ -209,12 +209,12 @@
   }
 
   .login_in_button_container {
-    margin-top: 34px;
+    margin-top: 19px;
   }
 }
 
 /* from ipad pro*/
-@media screen and (min-width: 820px) and (max-width: 1024px) {
+@media screen and (min-width: 820px) and (max-width: 912px) {
   .login_media_style {
     height: 60vh;
     width: 90vw;
@@ -229,7 +229,7 @@
   }
 
   .input_style {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
 
   .user_name_container {
@@ -250,7 +250,7 @@
   }
 
   .login_btn_media {
-    padding-bottom: 41px;
+    padding-bottom: 32px;
   }
 
   .login_in_button_container {
@@ -270,26 +270,31 @@
 
 @media screen and (min-width: 912px) and (max-width: 1024px) {
   .input_style {
-    font-size: 1.8rem;
+    font-size: 0.9rem;
   }
 
   .scanner_media_style {
-    height: 8rem;
+    height: 5rem;
   }
 
   .login_btn_media {
-    padding-bottom: 50px;
+    padding-bottom: 30px;
     margin-bottom: 40px;
   }
 
+  .login_media_style {
+    height: 0px;
+    margin-top: 46vh;
+  }
+
   .view_rooms_media {
-    width: 300px;
-    padding: 20px 0 20px 0;
+    width: 240px;
+    padding: 10px 0 10px 0;
   }
 
   .anchor_media_style {
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
   }
 }
 

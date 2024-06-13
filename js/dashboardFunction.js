@@ -84,6 +84,7 @@ function setOrganiserMeetingInfo() {
     "wrapper_meeting_mate_id"
   );
   meeting_room_container.classList.add("meeting_container_style");
+  meeting_room_container.classList.add("meeting_container_media");
 
   //executing/apending step by step
   appendMeetingContainerContent(meeting_room_container);
@@ -303,11 +304,15 @@ function meetingRoomsAppendingChild(meetingRooms) {
       data.forEach((element, index) => {
         const meetingRoom = document.createElement("div");
         meetingRoom.classList.add("room_style");
+        meetingRoom.classList.add("room_style_media");
 
         //container for the meeting room image
         const meetingRoomImageContainer = document.createElement("figure");
         meetingRoomImageContainer.classList.add(
           "meeting_image_container_style"
+        );
+        meetingRoomImageContainer.classList.add(
+          "meeting_image_container_media_style"
         );
 
         //image element itself for the image
