@@ -11,3 +11,5 @@
 # Working on schedule meeting page validation remaining for ending time and starting time, with local storage persistance.
 
 # Added utils for the common functions.
+
+# dashboard page responsiveness completed. Date : 13-05-24
