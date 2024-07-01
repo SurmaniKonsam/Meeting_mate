@@ -14,9 +14,6 @@
   display: block;
   position: relative;
   width: 100vw;
-  height: 100vh;
-  /* background-color: #c4bfbf; */
-  /* border: 2px solid #000000; */
 }
 
 .view_room_logo {
@@ -44,14 +41,14 @@
 
 /*meeting rooms container*/
 .wrapper_meeting_mate {
-  height: 120vh;
+  height: 1500px;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
-  width: 100vw;
+  /* border: 3px solid red; */
+  /* width: 100vw; */
   background-color: #f8f1f1;
   display: flex;
   flex-direction: column;
-  /* border: 3px solid green; */
 }
 
 /* for fading out*/
@@ -175,7 +172,7 @@
   width: 100%;
   /* border: 1px solid #000000; */
   margin-top: 10px;
-  height: auto;
+  /* height: auto; */
   /* background-color: #b697ca; */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -292,7 +289,7 @@
   }
 
   .meeting_container_media {
-    height: 100vh;
+    height: auto;
   }
 }
 
@@ -311,7 +308,7 @@
   }
 
   .meeting_container_media {
-    height: 100vh;
+    height: auto;
   }
 }
 
@@ -330,6 +327,6 @@
   }
 
   .meeting_container_media {
-    height: 100vh;
+    height: auto;
   }
 }

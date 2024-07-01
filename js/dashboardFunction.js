@@ -383,6 +383,7 @@ function searchCardFunction(elements) {
   const roomNotAvailableContainer = document.getElementById(
     "meeting_rooms_not_available_id"
   );
+  const meetingContainer = document.getElementById("wrapper_meeting_mate_id");
   let timeoutId;
 
   // Define a debounce function
@@ -413,6 +414,8 @@ function searchCardFunction(elements) {
         elements.forEach((x) => {
           x.parentNode.style.display = "none";
         });
+
+        meetingContainer.style.height = "1500px";
         roomNotAvailableContainer.style.display = "flex";
         roomNotAvailableContainer.textContent = "No Room To Display";
         roomNotAvailableContainer.classList.add("room_not_available_style");
