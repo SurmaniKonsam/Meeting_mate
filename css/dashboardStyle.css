@@ -17,8 +17,8 @@
 }
 
 .view_room_logo {
-  /* border: 1px solid #000000; */
-  height: 70px;
+  border: 2px solid #000000;
+  height: 73px;
   display: flex;
   justify-content: space-between;
   margin: 0px 10px 10px 10px;
@@ -277,6 +277,9 @@
 @media screen and (min-width: 360px) and (max-width: 600px) {
   .meeting_rooms_media_query {
     grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: auto;
+    /* border: 2px solid green; */
+    margin-bottom: 30px;
   }
 
   .room_style_media {
@@ -289,6 +292,7 @@
   }
 
   .meeting_container_media {
+    /* border: 3px solid red; */
     height: auto;
   }
 }
@@ -326,7 +330,7 @@
     width: 100%;
   }
 
-  .meeting_container_media {
+  /* .meeting_container_media {
     height: auto;
-  }
+  } */
 }

@@ -120,7 +120,7 @@ function appendMeetingContainerContent(meeting_room_container) {
     noUpcomingText.classList.add("no_upcoming_text_style");
     upcoming_meeting_header.appendChild(noUpcomingText);
   } else {
-    // console.log(`we have our upcoming meetings`);
+    console.log(`we have our upcoming meetings`);
     meetingHeader.textContent = "My Upcoming Meetings";
     upcoming_meeting_header.appendChild(meetingHeader);
 
@@ -403,9 +403,14 @@ function searchCardFunction(elements) {
         if (elementText.includes(searchText) || searchText === "") {
           x.parentNode.style.display = "block";
           roomNotAvailableContainer.style.display = "none";
+          meetingContainer.style.border = "none";
+          meetingContainer.style.height = "1500px";
+          // meetingContainer.style.border = "2px solid red";
+
           matchFound = true;
         } else {
-          x.parentNode.style.display = "none";
+          // x.parentNode.style.display = "none";
+          // meetingContainer.style.border = "2px solid red";
         }
       });
 
@@ -413,9 +418,12 @@ function searchCardFunction(elements) {
       if (!matchFound && searchText !== "") {
         elements.forEach((x) => {
           x.parentNode.style.display = "none";
+          meetingContainer.style.border = "2px solid red";
         });
 
-        meetingContainer.style.height = "1500px";
+        // meetingContainer.style.height = "950px";
+        // meetingContainer.style.border = "2px solid green";
+
         roomNotAvailableContainer.style.display = "flex";
         roomNotAvailableContainer.textContent = "No Room To Display";
         roomNotAvailableContainer.classList.add("room_not_available_style");
