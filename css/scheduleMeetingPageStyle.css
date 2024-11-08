@@ -21,7 +21,7 @@
   height: 70px;
   display: flex;
   justify-content: space-between;
-  margin: 10px;
+  margin: 16px;
 }
 
 /*view_logo_image container*/
@@ -29,7 +29,7 @@
   height: 100%;
   width: 200px;
   /* border: 2px solid red; */
-  padding-left: 30px;
+  /* padding-left: 30px; */
 }
 
 /*view_logo_style*/
@@ -43,7 +43,7 @@
 /*background-color: #f8f1f1;*/
 .wrapper_meeting_mate {
   /* height: 827px; */
-  height: 92vh;
+  height: 89vh;
   border-top-left-radius: 40px;
   border-top-right-radius: 40px;
   width: 100vw;
@@ -100,9 +100,10 @@
 
 .book_now_btn_style {
   color: #ffffff;
-  width: 85%;
+  width: 88%;
   border: none;
   cursor: pointer;
+  font-size: 17px;
   /* border-bottom: 2px solid #3f7776; */
   /* margin-top: 70px; */
   padding: 10px 0 10px 0;
@@ -120,6 +121,7 @@
   border-bottom: 2px solid #3f7776;
   margin-top: 17px;
   padding-left: 10px;
+  font-size: 18px;
 }
 
 .schedule_logo_style {
@@ -181,7 +183,7 @@ select {
   align-items: center;
   margin-left: 6px;
   color: #3f7776;
-  font-size: 13px;
+  font-size: 18px;
 }
 
 .meeting_date_style {
@@ -193,7 +195,8 @@ select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: none;
+  /* border: 2px solid #000000; */
+  /* background-color: #3f77763f; */
 }
 
 .starting_time_wrapper {
@@ -212,6 +215,7 @@ select {
   width: 65px;
   height: 20px;
   padding-top: 10px;
+  /* border: 2px solid #3f7776; */
 }
 
 .starting_time_input_style {
@@ -224,6 +228,7 @@ select {
   /* padding-left: 10px; */
   padding: 17px 15px;
   font-size: 15px;
+  /* border: 2px solid black; */
 }
 
 /*profile picture style*/
@@ -250,6 +255,43 @@ select {
     /* width: 3vw; */
     width: 90vw;
   }
+
+  .schedule_meeting_inputs {
+    font-size: 18px;
+  }
+
+  .check_box_label_style {
+    font-size: 18px;
+  }
+
+  .scheduled_meeting_time_style {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .starting_time_wrapper {
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 2px solid #3f7776;
+  }
+
+  .scheduled_meeting_time_style{
+    border-bottom: none;
+    padding: 0;
+  }
+
+  .starting_time_input_style{
+    border-bottom: none;
+  }
+
+  .ending_time_wrapper{
+    margin: 10px 0 10px 0;
+  }
+
+  .book_now_btn_style{
+    margin: 60px 0 20px 0;
+  }
+
 }
 
 /*
@@ -268,15 +310,20 @@ select {
   .check_box_label_style {
     font-size: 20px;
   }
+
+  .starting_time_label_style{
+    font-size: 18px;
+    width: 86px;
+  }
 }
 
 /*
   ipad pro
 */
 @media screen and (max-width: 1024px) {
-  .wrapper_meeting_mate {
-    height: 95vh;
-  }
+  /* .wrapper_meeting_mate {
+    height: 90vh;
+  } */
 
   .log_in_container_media {
     /* width: 3vw; */
